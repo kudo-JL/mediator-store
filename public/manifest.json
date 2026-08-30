@@ -1,0 +1,48 @@
+{
+  "name": "متجر الوسيط",
+  "short_name": "المتجر",
+  "description": "متجر إلكتروني - استيراد وبيع المنتجات",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "lang": "ar",
+  "dir": "rtl",
+  "background_color": "#f7f7f8",
+  "theme_color": "#2563eb",
+  "categories": ["shopping", "business"],
+  "icons": [
+    {
+      "src": "/static/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/images/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "السلة",
+      "short_name": "السلة",
+      "url": "/cart",
+      "icons": [{ "src": "/static/images/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "الإدارة",
+      "short_name": "الإدارة",
+      "url": "/admin",
+      "icons": [{ "src": "/static/images/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

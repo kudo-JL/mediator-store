@@ -1,0 +1,49 @@
+<%- include('../partials/header') %>
+
+<section class="hero">
+  <div class="container">
+    <h1 class="hero-title"><%= t('hero_title') %></h1>
+    <p class="hero-sub"><%= t('hero_sub') %></p>
+  </div>
+</section>
+
+<% if (categories && categories.length) { %>
+<section class="container section">
+  <h2 class="section-title"><%= t('categories') %></h2>
+  <div class="cat-grid">
+    <% categories.forEach(function(c){ %>
+      <a class="cat-card" href="/c/<%= c.slug %>">
+        <span class="cat-name">
+          <% if (lang === 'fr' && c.name_fr) { %><%= c.name_fr %><% } else if (lang === 'en' && c.name_en) { %><%= c.name_en %><% } else { %><%= c.name_ar %><% } %>
+        </span>
+      </a>
+    <% }) %>
+  </div>
+</section>
+<% } %>
+
+<% if (featured && featured.length) { %>
+<section class="container section">
+  <h2 class="section-title"><%= t('featured_products') %></h2>
+  <div class="product-grid">
+    <% featured.forEach(function(p){ %>
+      <%- include('partials/product-card', { p: p }) %>
+    <% }) %>
+  </div>
+</section>
+<% } %>
+
+<section class="container section">
+  <h2 class="section-title"><%= t('latest_products') %></h2>
+  <% if (products.length) { %>
+    <div class="product-grid">
+      <% products.forEach(function(p){ %>
+        <%- include('partials/product-card', { p: p }) %>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="empty"><%= t('no_products_yet') %></div>
+  <% } %>
+</section>
+
+<%- include('../partials/footer') %>

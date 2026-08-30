@@ -1,0 +1,58 @@
+<%- include('../partials/header') %>
+
+<section class="container section">
+  <h1 class="page-title"><%= t('checkout') %></h1>
+  <div class="checkout-grid">
+    <form class="checkout-form" method="post" action="/checkout">
+      <h3><%= t('customer_info') %></h3>
+      <div class="form-row">
+        <label><%= t('full_name') %> *</label>
+        <input type="text" name="customer_name" required>
+      </div>
+      <div class="form-row">
+        <label><%= t('phone') %> *</label>
+        <input type="tel" name="customer_phone" required>
+      </div>
+      <div class="form-row">
+        <label><%= t('email') %></label>
+        <input type="email" name="customer_email">
+      </div>
+      <div class="form-row">
+        <label><%= t('city') %></label>
+        <input type="text" name="customer_city">
+      </div>
+      <div class="form-row">
+        <label><%= t('address') %></label>
+        <textarea name="customer_address" rows="2"></textarea>
+      </div>
+      <div class="form-row">
+        <label><%= t('notes') %></label>
+        <textarea name="customer_notes" rows="2"></textarea>
+      </div>
+      <h3><%= t('payment_method') %></h3>
+      <div class="form-row">
+        <label class="radio">
+          <input type="radio" name="payment_method" value="cod" checked> <%= t('payment_cod') %>
+        </label>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg"><%= t('place_order') %></button>
+    </form>
+
+    <aside class="order-summary">
+      <h3><%= t('order_summary') %></h3>
+      <ul class="summary-list">
+        <% cart.items.forEach(function(it){ %>
+          <li>
+            <span class="sum-name"><%= it.name %> × <%= it.quantity %></span>
+            <span class="sum-price"><%= fmtPrice(it.unit_price * it.quantity) %></span>
+          </li>
+        <% }) %>
+      </ul>
+      <div class="summary-row"><span><%= t('subtotal') %></span><span><%= fmtPrice(subtotal) %></span></div>
+      <div class="summary-row"><span><%= t('shipping') %></span><span><%= fmtPrice(shipping) %></span></div>
+      <div class="summary-row total"><span><%= t('total') %></span><span><%= fmtPrice(total) %></span></div>
+    </aside>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

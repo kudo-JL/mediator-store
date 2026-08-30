@@ -1,0 +1,22 @@
+<article class="product-card" data-product-id="<%= p.id %>">
+  <a class="product-thumb" href="/p/<%= p.id %>">
+    <% if (p.image_path) { %>
+      <img src="<%= p.image_path %>" alt="<%= p.name %>" loading="lazy">
+    <% } else if (p.source_image_url) { %>
+      <img src="/img-proxy?url=<%= encodeURIComponent(p.source_image_url) %>"
+           alt="<%= p.name %>" loading="lazy"
+           referrerpolicy="no-referrer"
+           onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'),{className:'no-image',textContent:&quot;<%= t('no_image') %>&quot;}));">
+    <% } else { %>
+      <div class="no-image"><%= t('no_image') %></div>
+    <% } %>
+    <% if (p.featured) { %><span class="badge badge-featured">★</span><% } %>
+  </a>
+  <div class="product-body">
+    <h3 class="product-name"><a href="/p/<%= p.id %>"><%= p.name %></a></h3>
+    <div class="product-price"><%= fmtPrice(p.selling_price) %></div>
+    <form class="add-to-cart" data-product-id="<%= p.id %>">
+      <button type="submit" class="btn btn-primary btn-sm"><%= t('add_to_cart') %></button>
+    </form>
+  </div>
+</article>

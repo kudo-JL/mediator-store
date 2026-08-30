@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="<%= lang %>" dir="<%= dir %>">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title><%= typeof title !== 'undefined' ? title + ' | ' + site.name : site.name %></title>
+  <link rel="stylesheet" href="/static/css/store.css">
+  <link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/images/favicon-16.png">
+  <link rel="apple-touch-icon" href="/static/images/apple-touch-icon.png">
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="<%= site.name %>">
+  <meta name="description" content="<%= site.name %>">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="<%= site.name %>">
+</head>
+<body class="lang-<%= lang %> dir-<%= dir %>">
+<header class="site-header">
+  <div class="container header-row">
+    <a class="brand" href="/">
+      <span class="brand-mark">◈</span>
+      <span class="brand-name"><%= site.name %></span>
+    </a>
+    <form class="search-form" action="/search" method="get" role="search">
+      <input type="search" name="q" placeholder="<%= t('search_placeholder') %>" value="<%= typeof q !== 'undefined' ? q : '' %>" aria-label="بحث">
+      <button type="submit" class="btn btn-primary"><%= t('search') %></button>
+    </form>
+    <nav class="main-nav">
+      <a href="/" class="nav-link"><%= t('home') %></a>
+      <a href="/cart" class="nav-link cart-link">
+        <span class="cart-ico" aria-hidden="true">🛒</span>
+        <span><%= t('cart') %></span>
+        <span class="cart-count" id="cart-count">0</span>
+      </a>
+      <div class="lang-switch" aria-label="Language">
+        <% supportedLangs.forEach(function(c){ %>
+          <a class="lang-link <%= c === lang ? 'active' : '' %>" href="/lang/<%= c %>?next=<%= encodeURIComponent(currentPath) %>"><%= LangName[c] %></a>
+        <% }) %>
+      </div>
+    </nav>
+  </div>
+</header>
+<% if (flash) { %>
+  <div class="flash flash-<%= flash.type %>"><%= flash.message %></div>
+<% } %>
+<main class="site-main">

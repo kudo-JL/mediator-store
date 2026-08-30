@@ -1,0 +1,26 @@
+{
+  "name": "mediator-store",
+  "version": "1.0.0",
+  "description": "Multi-vendor reseller e-commerce store with URL import (Arabic, RTL).",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "seed": "node lib/seed.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "cheerio": "^1.0.0",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "express-session": "^1.18.1",
+    "multer": "^2.0.1"
+  }
+}

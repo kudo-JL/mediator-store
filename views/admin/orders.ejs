@@ -1,0 +1,51 @@
+<%- include('../partials/admin-header') %>
+
+<div class="page-head">
+  <h1 class="page-title"><%= t('orders') %></h1>
+</div>
+
+<form class="filter-bar" method="get" action="/admin/orders">
+  <select name="status">
+    <option value=""><%= t('all_statuses') %></option>
+    <% ['pending','confirmed','shipped','delivered','cancelled'].forEach(function(s){ %>
+      <option value="<%= s %>" <%= status === s ? 'selected' : '' %>><%= t('order_status_' + s) %></option>
+    <% }) %>
+  </select>
+  <button class="btn" type="submit"><%= t('filter') %></button>
+</form>
+
+<% if (orders.length === 0) { %>
+  <div class="empty"><%= t('no_orders_yet') %></div>
+<% } else { %>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th><%= t('order_number') %></th>
+        <th><%= t('date') %></th>
+        <th><%= t('customer') %></th>
+        <th><%= t('total') %></th>
+        <th><%= t('status') %></th>
+        <th><%= t('payment') %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% orders.forEach(function(o){ %>
+        <tr>
+          <td><a href="/admin/orders/<%= o.id %>"><%= o.order_number %></a></td>
+          <td><span class="muted small"><%= o.created_at %></span></td>
+          <td>
+            <%= o.customer_name %><br>
+            <span class="muted small"><%= o.customer_phone %></span>
+          </td>
+          <td><strong><%= fmtPrice(o.total) %></strong></td>
+          <td><span class="status-pill status-<%= o.status %>"><%= t('order_status_' + o.status) %></span></td>
+          <td><span class="muted small"><%= t('payment_' + (o.payment_method || 'cod')) %></span></td>
+          <td><a class="btn btn-sm" href="/admin/orders/<%= o.id %>">↗</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
+
+<%- include('../partials/admin-footer') %>

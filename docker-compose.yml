@@ -1,0 +1,39 @@
+# docker-compose.yml — for local production-like testing AND Coolify compatibility.
+#
+# When deployed via Coolify:
+#   - Coolify reads this file and creates a container with the same config.
+#   - Persistent volumes (./data, ./uploads) are kept across deploys.
+#   - Environment variables come from Coolify's UI (do not commit a .env file).
+#
+# When run locally for testing:
+#   SESSION_SECRET=$(openssl rand -hex 32) ADMIN_PASSWORD=change-me docker compose up
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mediator-store:latest
+    container_name: mediator-store
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - SESSION_SECRET=${SESSION_SECRET:-please-change-me-to-a-long-random-string}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+      - STORE_NAME=${STORE_NAME:-متجر الوسيط}
+      - STORE_CURRENCY=${STORE_CURRENCY:-د.م.}
+      - DEFAULT_LANGUAGE=${DEFAULT_LANGUAGE:-ar}
+    volumes:
+      # Persistent data — kept across container restarts
+      - ./data:/app/data
+      - ./uploads:/app/uploads
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/',r=>process.exit(r.statusCode<400?0:1)).on('error',()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

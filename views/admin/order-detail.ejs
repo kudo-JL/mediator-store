@@ -1,0 +1,71 @@
+<%- include('../partials/admin-header') %>
+
+<div class="page-head">
+  <h1 class="page-title"><%= t('order') %> #<%= order.order_number %></h1>
+  <div class="page-actions">
+    <a class="btn btn-ghost" href="/admin/orders">← <%= t('back') %></a>
+  </div>
+</div>
+
+<div class="grid-2">
+  <section class="card">
+    <h3 class="card-title"><%= t('order_summary') %></h3>
+    <table class="data-table">
+      <thead><tr><th><%= t('product') %></th><th><%= t('price') %></th><th><%= t('quantity') %></th><th><%= t('line_total') %></th></tr></thead>
+      <tbody>
+        <% items.forEach(function(it){ %>
+          <tr>
+            <td>
+              <a href="/admin/products/<%= it.product_id || '' %>/edit"><%= it.product_name %></a>
+            </td>
+            <td><%= fmtPrice(it.unit_price) %></td>
+            <td><%= it.quantity %></td>
+            <td><strong><%= fmtPrice(it.line_total) %></strong></td>
+          </tr>
+        <% }) %>
+      </tbody>
+      <tfoot>
+        <tr><td colspan="3" class="ar"><%= t('subtotal') %></td><td><%= fmtPrice(order.subtotal) %></td></tr>
+        <tr><td colspan="3" class="ar"><%= t('shipping') %></td><td><%= fmtPrice(order.shipping) %></td></tr>
+        <tr><td colspan="3" class="ar"><strong><%= t('total') %></strong></td><td><strong><%= fmtPrice(order.total) %></strong></td></tr>
+      </tfoot>
+    </table>
+  </section>
+
+  <aside>
+    <div class="card">
+      <h3 class="card-title"><%= t('status') %></h3>
+      <p>
+        <span class="status-pill status-<%= order.status %>"><%= t('order_status_' + order.status) %></span>
+      </p>
+      <form method="post" action="/admin/orders/<%= order.id %>/status" class="status-form">
+        <select name="status">
+          <% ['pending','confirmed','shipped','delivered','cancelled'].forEach(function(s){ %>
+            <option value="<%= s %>" <%= order.status === s ? 'selected' : '' %>><%= t('order_status_' + s) %></option>
+          <% }) %>
+        </select>
+        <button class="btn btn-primary" type="submit"><%= t('update') %></button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title"><%= t('customer_info') %></h3>
+      <ul class="kv">
+        <li><strong><%= t('full_name') %>:</strong> <%= order.customer_name %></li>
+        <li><strong><%= t('phone') %>:</strong> <a href="tel:<%= order.customer_phone %>"><%= order.customer_phone %></a></li>
+        <% if (order.customer_email) { %><li><strong><%= t('email') %>:</strong> <%= order.customer_email %></li><% } %>
+        <% if (order.customer_city) { %><li><strong><%= t('city') %>:</strong> <%= order.customer_city %></li><% } %>
+        <% if (order.customer_address) { %><li><strong><%= t('address') %>:</strong> <%= order.customer_address %></li><% } %>
+        <% if (order.customer_notes) { %><li><strong><%= t('notes') %>:</strong> <%= order.customer_notes %></li><% } %>
+      </ul>
+      <% if (site.contact.whatsapp || order.customer_phone) { %>
+        <a class="btn btn-primary btn-block" target="_blank" rel="noopener"
+           href="https://wa.me/<%= order.customer_phone.replace(/[^\d]/g,'') %>?text=<%= encodeURIComponent(t('whatsapp_customer_msg', { num: order.order_number })) %>">
+          💬 <%= t('contact_via_whatsapp') %>
+        </a>
+      <% } %>
+    </div>
+  </aside>
+</div>
+
+<%- include('../partials/admin-footer') %>

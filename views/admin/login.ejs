@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="<%= lang %>" dir="<%= dir %>">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= t('login_title') %> | <%= t('admin_panel') %></title>
+  <link rel="stylesheet" href="/static/css/admin.css">
+</head>
+<body class="login-body">
+  <div class="login-card">
+    <div class="login-logo">◈</div>
+    <h1 class="login-title"><%= site.name %></h1>
+    <p class="muted"><%= t('admin_panel') %></p>
+    <% if (flash) { %><div class="flash flash-<%= flash.type %>"><%= flash.message %></div><% } %>
+    <form method="post" action="/admin/login" class="login-form">
+      <% if (next) { %><input type="hidden" name="next" value="<%= next %>"><% } %>
+      <div class="form-row">
+        <label><%= t('username') %></label>
+        <input type="text" name="username" required autofocus>
+      </div>
+      <div class="form-row">
+        <label><%= t('password') %></label>
+        <input type="password" name="password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block"><%= t('login') %></button>
+    </form>
+    <p class="muted small center">
+      <a href="/">← <%= t('back_to_store') %></a>
+    </p>
+  </div>
+</body>
+</html>

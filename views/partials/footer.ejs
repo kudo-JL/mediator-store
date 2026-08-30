@@ -1,0 +1,43 @@
+</main>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h3 class="footer-title"><%= site.name %></h3>
+      <p class="muted"><%= site.footer_note || t('footer_default') %></p>
+    </div>
+    <div>
+      <h3 class="footer-title"><%= t('contact_us') %></h3>
+      <ul class="footer-list">
+        <% if (site.contact.phone) { %><li>📞 <%= site.contact.phone %></li><% } %>
+        <% if (site.contact.whatsapp) { %><li>💬 <a href="https://wa.me/<%= site.contact.whatsapp.replace(/[^\d]/g,'') %>" target="_blank" rel="noopener">WhatsApp</a></li><% } %>
+        <% if (site.contact.email) { %><li>✉️ <%= site.contact.email %></li><% } %>
+        <% if (site.contact.address) { %><li>📍 <%= site.contact.address %></li><% } %>
+      </ul>
+    </div>
+    <div>
+      <h3 class="footer-title"><%= t('quick_links') %></h3>
+      <ul class="footer-list">
+        <li><a href="/"><%= t('home') %></a></li>
+        <li><a href="/cart"><%= t('cart') %></a></li>
+        <li><a href="/admin/login"><%= t('admin') %></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© <%= new Date().getFullYear() %> <%= site.name %></span>
+  </div>
+</footer>
+<script src="/static/js/store.js"></script>
+<script src="/static/js/cart.js"></script>
+<script>
+  // PWA: register service worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/static/sw.js').catch(function (e) {
+        console.warn('SW registration failed:', e);
+      });
+    });
+  }
+</script>
+</body>
+</html>

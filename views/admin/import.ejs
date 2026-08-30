@@ -1,0 +1,244 @@
+<%- include('../partials/admin-header') %>
+
+<div class="page-head">
+  <h1 class="page-title"><%= t('import_by_url') %></h1>
+  <div class="page-actions">
+    <a class="btn btn-ghost" href="/admin/products">← <%= t('back') %></a>
+  </div>
+</div>
+
+<div class="card">
+  <h3 class="card-title"><%= t('paste_product_url') %></h3>
+  <p class="muted"><%= t('import_hint') %></p>
+  <form method="post" action="/admin/import" class="url-form">
+    <input type="url" name="url" value="<%= url %>" required dir="ltr"
+           placeholder="https://www.amazon.com/..." class="grow">
+    <button class="btn btn-primary" type="submit">🔍 <%= t('fetch') %></button>
+  </form>
+
+  <% if (error) { %>
+    <div class="flash flash-error">⚠️ <%= error %></div>
+  <% } %>
+
+  <% if (result) { %>
+    <hr>
+    <h3 class="card-title"><%= t('preview') %></h3>
+
+    <%# ----- Image picker (3 options) ----- %>
+    <div class="image-picker">
+      <% if (result.imagePath) { %>
+        <div class="ip-current">
+          <img id="ip-preview" src="<%= result.imagePath %>" alt="">
+          <div class="ip-status ok">✓ <%= t('image_downloaded') %></div>
+        </div>
+      <% } else { %>
+        <div class="ip-current">
+          <% if (result.image) { %>
+            <img id="ip-preview" src="<%= result.image %>" alt="" referrerpolicy="no-referrer" onerror="this.onerror=null;this.closest('.ip-current').classList.add('ip-broken');this.replaceWith(Object.assign(document.createElement('div'),{className:'no-image',textContent:'⚠️ لا يمكن تحميل الصورة'}));">
+            <div class="ip-status warn">⚠️ <%= t('image_hotlink_only') %></div>
+          <% } else { %>
+            <div class="no-image large">— <%= t('no_image') %> —</div>
+            <div class="ip-status err">✗ <%= t('image_not_found') %></div>
+          <% } %>
+        </div>
+      <% } %>
+
+      <div class="ip-actions">
+        <%# 1. Paste a custom image URL — server downloads it for you %>
+        <div class="ip-row">
+          <label>🔗 <%= t('image_custom_url') %></label>
+          <div class="ip-inline">
+            <input type="url" id="custom-image-url" dir="ltr"
+                   placeholder="https://example.com/image.jpg"
+                   value="<%= result.image || '' %>">
+            <button type="button" class="btn btn-sm" id="try-custom">
+              ⬇ <%= t('image_try_download') %>
+            </button>
+          </div>
+          <small class="muted"><%= t('image_custom_url_hint') %></small>
+        </div>
+
+        <%# 2. Pick from the candidates the scraper found %>
+        <% if (result.imageCandidates && result.imageCandidates.length) { %>
+          <div class="ip-row">
+            <label>🖼 <%= t('image_candidates') %></label>
+            <div class="ip-thumbs">
+              <% result.imageCandidates.forEach(function(c, i){ %>
+                <button type="button" class="ip-thumb" data-url="<%= c.url %>" title="<%= c.src %>: <%= c.url %>">
+                  <img src="<%= c.url %>" referrerpolicy="no-referrer" loading="lazy" onerror="this.parentNode.remove()">
+                  <span class="ip-thumb-src"><%= c.src %></span>
+                </button>
+              <% }) %>
+            </div>
+            <small class="muted"><%= t('image_candidates_hint') %></small>
+          </div>
+        <% } %>
+
+        <%# 3. Upload from disk is in the form below as the gallery field %>
+      </div>
+    </div>
+
+    <%# ----- Save form ----- %>
+    <form method="post" action="/admin/products/save" enctype="multipart/form-data" class="import-save-form">
+      <input type="hidden" name="source_url" value="<%= result.sourceUrl %>">
+      <input type="hidden" name="source_store" value="<%= result.sourceStore %>">
+      <input type="hidden" name="source_image_url" id="source_image_url" value="<%= result.sourceImageUrl || '' %>">
+      <input type="hidden" name="image_path_override" id="image_path_override" value="<%= result.imagePath || '' %>">
+      <input type="hidden" name="custom_image_url" id="custom_image_url" value="">
+
+      <div class="form-row">
+        <label><%= t('name_ar') %> *</label>
+        <input type="text" name="name_ar" value="<%= result.name %>" required>
+      </div>
+      <div class="form-row">
+        <label><%= t('description_ar') %></label>
+        <textarea name="description_ar" rows="3"><%= result.description || '' %></textarea>
+      </div>
+
+      <div class="form-row two">
+        <div>
+          <label><%= t('original_price') %> 🔒</label>
+          <input type="number" step="0.01" name="original_price" id="imp-orig" value="<%= result.price %>" dir="ltr">
+          <small class="muted"><%= t('hidden_from_customers') %></small>
+        </div>
+        <div>
+          <label><%= t('selling_price') %> *</label>
+          <input type="number" step="0.01" name="selling_price" id="imp-sell" value="<%= Math.ceil((result.price || 0) * 1.3) %>" required dir="ltr">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label><%= t('profit_calculator') %></label>
+        <div class="margin-tools">
+          <input type="number" id="imp-margin" placeholder="%" min="0" max="500" value="30" dir="ltr">
+          <button type="button" class="btn btn-sm" id="imp-apply"><%= t('apply') %></button>
+          <small id="imp-preview" class="muted"></small>
+        </div>
+      </div>
+
+      <div class="form-row two">
+        <div>
+          <label><%= t('sku') %></label>
+          <input type="text" name="sku" value="<%= result.sku || '' %>" dir="ltr">
+        </div>
+        <div>
+          <label><%= t('stock') %></label>
+          <input type="number" name="stock" value="10" min="0" dir="ltr">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label><%= t('image_upload_fallback') %></label>
+        <input type="file" name="gallery" accept="image/*">
+        <small class="muted"><%= t('image_upload_fallback_hint') %></small>
+      </div>
+
+      <div class="form-row two">
+        <div>
+          <label class="radio">
+            <input type="radio" name="status" value="draft" checked> <%= t('product_status_draft') %>
+          </label>
+        </div>
+        <div>
+          <label class="radio">
+            <input type="radio" name="status" value="published"> <%= t('product_status_published') %>
+          </label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg">＋ <%= t('add_to_store') %></button>
+    </form>
+  <% } %>
+</div>
+
+<style>
+  .image-picker { display: grid; grid-template-columns: 280px 1fr; gap: 16px; align-items: start; }
+  .ip-current { background: var(--bg); border-radius: 8px; padding: 10px; text-align: center; }
+  .ip-current img { max-width: 100%; max-height: 280px; border-radius: 6px; }
+  .ip-current.ip-broken img { display: none; }
+  .ip-status { margin-top: 8px; font-size: 0.85rem; padding: 4px 8px; border-radius: 6px; display: inline-block; }
+  .ip-status.ok { background: #dcfce7; color: #166534; }
+  .ip-status.warn { background: #fef3c7; color: #92400e; }
+  .ip-status.err { background: #fee2e2; color: #991b1b; }
+  .ip-actions { display: flex; flex-direction: column; gap: 14px; }
+  .ip-row label { font-weight: 500; margin-bottom: 4px; display: block; }
+  .ip-inline { display: flex; gap: 8px; }
+  .ip-inline input { flex: 1; }
+  .ip-thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .ip-thumb { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 4px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .ip-thumb img { width: 80px; height: 80px; object-fit: cover; border-radius: 4px; display: block; }
+  .ip-thumb-src { font-size: 0.7rem; color: var(--muted); }
+  .ip-thumb:hover { border-color: var(--primary); }
+  @media (max-width: 800px) { .image-picker { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  // margin calculator
+  (function(){
+    const orig = document.getElementById('imp-orig');
+    const sell = document.getElementById('imp-sell');
+    const m = document.getElementById('imp-margin');
+    const btn = document.getElementById('imp-apply');
+    const pv = document.getElementById('imp-preview');
+    function update(){
+      const o = parseFloat(orig.value) || 0;
+      const s = parseFloat(sell.value) || 0;
+      if (o > 0) {
+        const r = ((s - o) / o) * 100;
+        pv.textContent = (r >= 0 ? '+' : '') + r.toFixed(1) + '%';
+      } else pv.textContent = '';
+    }
+    function apply(){
+      const o = parseFloat(orig.value) || 0;
+      const mm = parseFloat(m.value) || 0;
+      if (o > 0) sell.value = Math.round(o * (1 + mm / 100) * 100) / 100;
+      update();
+    }
+    if (orig && sell) {
+      orig.addEventListener('input', update);
+      sell.addEventListener('input', update);
+      if (btn) btn.addEventListener('click', apply);
+      update();
+    }
+  })();
+
+  // image picker interactions
+  (function(){
+    // 1) "Try download this URL" — sets the hidden custom_image_url; the
+    //    server will attempt the download on form submit and use the result
+    //    as the local image_path.
+    const tryBtn = document.getElementById('try-custom');
+    const customInput = document.getElementById('custom-image-url');
+    const customHidden = document.getElementById('custom_image_url');
+    const srcHidden = document.getElementById('source_image_url');
+    if (tryBtn && customInput && customHidden) {
+      tryBtn.addEventListener('click', function(){
+        const v = customInput.value.trim();
+        if (!v) return;
+        customHidden.value = v;
+        if (srcHidden) srcHidden.value = v;
+        // Visual feedback
+        tryBtn.textContent = '✓ سيتم التنزيل عند الحفظ';
+        tryBtn.classList.add('btn-primary');
+      });
+    }
+
+    // 2) Click a candidate thumbnail → fill the custom URL with it
+    document.querySelectorAll('.ip-thumb').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        const url = btn.getAttribute('data-url');
+        if (customInput) customInput.value = url;
+        if (customHidden) customHidden.value = url;
+        if (srcHidden) srcHidden.value = url;
+        // Update the main preview
+        const preview = document.getElementById('ip-preview');
+        if (preview && preview.tagName === 'IMG') {
+          preview.src = url;
+        }
+        tryBtn.textContent = '✓ سيتم التنزيل عند الحفظ';
+      });
+    });
+  })();
+</script>
+
+<%- include('../partials/admin-footer') %>

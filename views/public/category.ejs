@@ -1,0 +1,18 @@
+<%- include('../partials/header') %>
+
+<section class="container section">
+  <h1 class="page-title">
+    <% if (lang === 'fr' && category.name_fr) { %><%= category.name_fr %><% } else if (lang === 'en' && category.name_en) { %><%= category.name_en %><% } else { %><%= category.name_ar %><% } %>
+  </h1>
+  <% if (products.length) { %>
+    <div class="product-grid">
+      <% products.forEach(function(p){ %>
+        <%- include('partials/product-card', { p: p }) %>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="empty"><%= t('no_products_in_category') %></div>
+  <% } %>
+</section>
+
+<%- include('../partials/footer') %>

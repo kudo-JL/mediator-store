@@ -1,0 +1,86 @@
+<%- include('../partials/admin-header') %>
+
+<div class="page-head">
+  <h1 class="page-title"><%= t('products') %></h1>
+  <div class="page-actions">
+    <a class="btn btn-primary" href="/admin/import">🔗 <%= t('import_by_url') %></a>
+    <a class="btn" href="/admin/products/new">＋ <%= t('new_product') %></a>
+  </div>
+</div>
+
+<form class="filter-bar" method="get" action="/admin/products">
+  <input type="search" name="q" value="<%= q %>" placeholder="<%= t('search_placeholder') %>">
+  <select name="status">
+    <option value=""><%= t('all_statuses') %></option>
+    <option value="published" <%= status === 'published' ? 'selected' : '' %>><%= t('product_status_published') %></option>
+    <option value="draft" <%= status === 'draft' ? 'selected' : '' %>><%= t('product_status_draft') %></option>
+  </select>
+  <button class="btn" type="submit"><%= t('filter') %></button>
+</form>
+
+<% if (products.length === 0) { %>
+  <div class="empty">
+    <p><%= t('no_products_yet') %></p>
+    <a class="btn btn-primary" href="/admin/import">🔗 <%= t('import_by_url') %></a>
+    <a class="btn" href="/admin/products/new">＋ <%= t('new_product') %></a>
+  </div>
+<% } else { %>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th><%= t('name') %></th>
+        <th><%= t('original_price') %></th>
+        <th><%= t('selling_price') %></th>
+        <th><%= t('margin') %></th>
+        <th><%= t('stock') %></th>
+        <th><%= t('status') %></th>
+        <th><%= t('actions') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% products.forEach(function(p){
+           const margin = p.original_price > 0
+             ? Math.round(((p.selling_price - p.original_price) / p.original_price) * 100)
+             : 0;
+      %>
+        <tr>
+          <td>
+            <% if (p.image_path) { %>
+              <img class="thumb-sm" src="<%= p.image_path %>" alt="">
+            <% } %>
+          </td>
+          <td>
+            <a href="/admin/products/<%= p.id %>/edit"><strong><%= p.name_ar %></strong></a>
+            <% if (p.source_store) { %><div class="muted small"><%= t('from') %>: <%= p.source_store %></div><% } %>
+          </td>
+          <td class="muted"><s><%= fmtPrice(p.original_price) %></s></td>
+          <td><strong><%= fmtPrice(p.selling_price) %></strong></td>
+          <td>
+            <% if (margin > 0) { %>
+              <span class="status-pill status-published">+<%= margin %>%</span>
+            <% } else if (margin < 0) { %>
+              <span class="status-pill status-cancelled"><%= margin %>%</span>
+            <% } else { %>
+              <span class="muted">—</span>
+            <% } %>
+          </td>
+          <td><%= p.stock %></td>
+          <td><span class="status-pill status-<%= p.status %>"><%= t('product_status_' + p.status) %></span></td>
+          <td class="actions">
+            <a class="btn btn-sm" href="/admin/products/<%= p.id %>/edit" title="<%= t('edit') %>">✎</a>
+            <form method="post" action="/admin/products/<%= p.id %>/toggle" style="display:inline">
+              <button class="btn btn-sm" type="submit" title="<%= t('toggle_publish') %>"><%= p.status === 'published' ? '⏸' : '▶' %></button>
+            </form>
+            <a class="btn btn-sm" href="/p/<%= p.id %>" target="_blank" title="<%= t('view') %>">↗</a>
+            <form method="post" action="/admin/products/<%= p.id %>/delete" style="display:inline" onsubmit="return confirm('<%= t('confirm_delete') %>')">
+              <button class="btn btn-sm danger" type="submit" title="<%= t('delete') %>">🗑</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
+
+<%- include('../partials/admin-footer') %>

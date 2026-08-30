@@ -1,0 +1,20 @@
+<%- include('../partials/header') %>
+
+<section class="container section">
+  <h1 class="page-title">
+    <% if (q) { %><%= t('search_results_for', { q: q }) %><% } else { %><%= t('search') %><% } %>
+  </h1>
+  <% if (products.length) { %>
+    <div class="product-grid">
+      <% products.forEach(function(p){ %>
+        <%- include('partials/product-card', { p: p }) %>
+      <% }) %>
+    </div>
+  <% } else if (q) { %>
+    <div class="empty"><%= t('no_results_for', { q: q }) %></div>
+  <% } else { %>
+    <div class="empty"><%= t('enter_search_term') %></div>
+  <% } %>
+</section>
+
+<%- include('../partials/footer') %>

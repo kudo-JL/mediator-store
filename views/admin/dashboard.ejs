@@ -1,0 +1,86 @@
+<%- include('../partials/admin-header') %>
+
+<div class="page-head">
+  <h1 class="page-title"><%= t('dashboard') %></h1>
+  <div class="page-actions">
+    <a class="btn btn-primary" href="/admin/import">🔗 <%= t('import_by_url') %></a>
+    <a class="btn" href="/admin/products/new">＋ <%= t('new_product') %></a>
+  </div>
+</div>
+
+<div class="stat-grid">
+  <a class="stat-card" href="/admin/products?status=published">
+    <div class="stat-num"><%= counts.products %></div>
+    <div class="stat-label"><%= t('published_products') %></div>
+  </a>
+  <a class="stat-card" href="/admin/products?status=draft">
+    <div class="stat-num"><%= counts.drafts %></div>
+    <div class="stat-label"><%= t('drafts') %></div>
+  </a>
+  <a class="stat-card" href="/admin/orders">
+    <div class="stat-num"><%= counts.orders %></div>
+    <div class="stat-label"><%= t('orders') %></div>
+  </a>
+  <a class="stat-card" href="/admin/orders?status=pending">
+    <div class="stat-num"><%= counts.pending %></div>
+    <div class="stat-label"><%= t('pending_orders') %></div>
+  </a>
+</div>
+
+<div class="grid-2">
+  <section class="card">
+    <div class="card-head">
+      <h3><%= t('latest_orders') %></h3>
+      <a class="muted small" href="/admin/orders"><%= t('view_all') %></a>
+    </div>
+    <% if (recentOrders.length === 0) { %>
+      <div class="empty small"><%= t('no_orders_yet') %></div>
+    <% } else { %>
+      <table class="data-table compact">
+        <thead><tr><th><%= t('order_number') %></th><th><%= t('customer') %></th><th><%= t('total') %></th><th><%= t('status') %></th><th></th></tr></thead>
+        <tbody>
+          <% recentOrders.forEach(function(o){ %>
+            <tr>
+              <td><a href="/admin/orders/<%= o.id %>"><%= o.order_number %></a></td>
+              <td><%= o.customer_name %><br><span class="muted small"><%= o.customer_phone %></span></td>
+              <td><%= fmtPrice(o.total) %></td>
+              <td><span class="status-pill status-<%= o.status %>"><%= t('order_status_' + o.status) %></span></td>
+              <td><a class="btn btn-sm" href="/admin/orders/<%= o.id %>">↗</a></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h3><%= t('latest_products') %></h3>
+      <a class="muted small" href="/admin/products"><%= t('view_all') %></a>
+    </div>
+    <% if (recentProducts.length === 0) { %>
+      <div class="empty small"><%= t('no_products_yet') %></div>
+    <% } else { %>
+      <table class="data-table compact">
+        <thead><tr><th></th><th><%= t('name') %></th><th><%= t('selling_price') %></th><th><%= t('stock') %></th><th><%= t('status') %></th></tr></thead>
+        <tbody>
+          <% recentProducts.forEach(function(p){ %>
+            <tr>
+              <td>
+                <% if (p.image_path) { %>
+                  <img class="thumb-sm" src="<%= p.image_path %>" alt="">
+                <% } %>
+              </td>
+              <td><a href="/admin/products/<%= p.id %>/edit"><%= p.name_ar %></a></td>
+              <td><%= fmtPrice(p.selling_price) %></td>
+              <td><%= p.stock %></td>
+              <td><span class="status-pill status-<%= p.status %>"><%= t('product_status_' + p.status) %></span></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </section>
+</div>
+
+<%- include('../partials/admin-footer') %>

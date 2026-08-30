@@ -1,0 +1,57 @@
+<%- include('../partials/header') %>
+
+<section class="container section">
+  <div class="product-detail">
+    <div class="pd-gallery">
+      <% if (product.image_path) { %>
+        <img src="<%= product.image_path %>" alt="<%= product.name %>">
+      <% } else if (product.source_image_url) { %>
+        <img src="/img-proxy?url=<%= encodeURIComponent(product.source_image_url) %>"
+             alt="<%= product.name %>" referrerpolicy="no-referrer"
+             onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'),{className:'no-image large',textContent:&quot;<%= t('no_image') %>&quot;}));">
+      <% } else { %>
+        <div class="no-image large"><%= t('no_image') %></div>
+      <% } %>
+    </div>
+    <div class="pd-info">
+      <h1 class="pd-title"><%= product.name %></h1>
+      <% if (product.sku) { %><div class="muted small">SKU: <%= product.sku %></div><% } %>
+      <div class="pd-price"><%= fmtPrice(product.selling_price) %></div>
+      <% if (product.stock <= 0) { %>
+        <div class="stock out"><%= t('out_of_stock') %></div>
+      <% } else if (product.stock < 5) { %>
+        <div class="stock low"><%= t('only_left', { n: product.stock }) %></div>
+      <% } else { %>
+        <div class="stock ok"><%= t('in_stock') %></div>
+      <% } %>
+      <form class="add-to-cart-inline" data-product-id="<%= product.id %>">
+        <div class="qty-row">
+          <label for="qty"><%= t('quantity') %></label>
+          <input type="number" id="qty" name="quantity" value="1" min="1" max="<%= Math.max(product.stock, 1) %>">
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" <%= product.stock <= 0 ? 'disabled' : '' %>>
+          <%= t('add_to_cart') %>
+        </button>
+      </form>
+      <% if (product.description) { %>
+        <div class="pd-description">
+          <h3><%= t('description') %></h3>
+          <p><%= product.description %></p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<% if (related && related.length) { %>
+<section class="container section">
+  <h2 class="section-title"><%= t('related_products') %></h2>
+  <div class="product-grid">
+    <% related.forEach(function(p){ %>
+      <%- include('partials/product-card', { p: p }) %>
+    <% }) %>
+  </div>
+</section>
+<% } %>
+
+<%- include('../partials/footer') %>

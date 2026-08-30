@@ -1,0 +1,22 @@
+<aside class="admin-sidebar">
+  <nav>
+    <a class="side-link <%= currentPath === '/admin' || currentPath === '/admin/' ? 'active' : '' %>" href="/admin">
+      <span>🏠</span> <%= t('dashboard') %>
+    </a>
+    <a class="side-link <%= currentPath.startsWith('/admin/products') ? 'active' : '' %>" href="/admin/products">
+      <span>📦</span> <%= t('products') %>
+    </a>
+    <a class="side-link <%= currentPath.startsWith('/admin/import') ? 'active' : '' %>" href="/admin/import">
+      <span>🔗</span> <%= t('import_by_url') %>
+    </a>
+    <a class="side-link <%= currentPath.startsWith('/admin/categories') ? 'active' : '' %>" href="/admin/categories">
+      <span>🗂️</span> <%= t('categories') %>
+    </a>
+    <a class="side-link <%= currentPath.startsWith('/admin/orders') ? 'active' : '' %>" href="/admin/orders">
+      <span>🧾</span> <%= t('orders') %>
+    </a>
+    <a class="side-link <%= currentPath.startsWith('/admin/settings') ? 'active' : '' %>" href="/admin/settings">
+      <span>⚙️</span> <%= t('settings') %>
+    </a>
+  </nav>
+</aside>

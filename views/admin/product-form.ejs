@@ -1,0 +1,198 @@
+<%- include('../partials/admin-header') %>
+
+<%
+  const isEdit = !!product;
+  const p = product || {
+    name_ar: '', name_fr: '', name_en: '',
+    description_ar: '', description_fr: '', description_en: '',
+    original_price: 0, selling_price: 0, cost_price: 0,
+    sku: '', stock: 0, status: 'draft', featured: 0,
+    category_id: null, source_url: '', source_store: '',
+    image_path: null, gallery_paths: null,
+  };
+%>
+
+<div class="page-head">
+  <h1 class="page-title"><%= isEdit ? t('edit_product') : t('new_product') %></h1>
+  <div class="page-actions">
+    <a class="btn btn-ghost" href="/admin/products">← <%= t('back') %></a>
+  </div>
+</div>
+
+<form class="form-grid" method="post" action="/admin/products/save" enctype="multipart/form-data">
+  <% if (isEdit) { %><input type="hidden" name="id" value="<%= p.id %>"><% } %>
+
+  <div class="form-main">
+    <div class="card">
+      <h3 class="card-title"><%= t('basic_info') %></h3>
+      <div class="form-row">
+        <label><%= t('name_ar') %> *</label>
+        <input type="text" name="name_ar" value="<%= p.name_ar %>" required>
+      </div>
+      <div class="form-row two">
+        <div>
+          <label><%= t('name_fr') %></label>
+          <input type="text" name="name_fr" value="<%= p.name_fr || '' %>" dir="ltr">
+        </div>
+        <div>
+          <label><%= t('name_en') %></label>
+          <input type="text" name="name_en" value="<%= p.name_en || '' %>" dir="ltr">
+        </div>
+      </div>
+      <div class="form-row">
+        <label><%= t('description_ar') %></label>
+        <textarea name="description_ar" rows="4"><%= p.description_ar || '' %></textarea>
+      </div>
+      <div class="form-row two">
+        <div>
+          <label><%= t('description_fr') %></label>
+          <textarea name="description_fr" rows="3" dir="ltr"><%= p.description_fr || '' %></textarea>
+        </div>
+        <div>
+          <label><%= t('description_en') %></label>
+          <textarea name="description_en" rows="3" dir="ltr"><%= p.description_en || '' %></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title"><%= t('images') %></h3>
+      <% if (p.image_path) { %>
+        <div class="current-images">
+          <img class="thumb-md" src="<%= p.image_path %>" alt="">
+        </div>
+      <% } %>
+      <div class="form-row">
+        <label><%= t('main_image') %></label>
+        <input type="file" name="gallery" accept="image/*" multiple>
+        <small class="muted"><%= t('images_hint') %></small>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title"><%= t('source_info') %></h3>
+      <div class="form-row two">
+        <div>
+          <label><%= t('source_url') %></label>
+          <input type="url" name="source_url" value="<%= p.source_url || '' %>" dir="ltr" placeholder="https://...">
+        </div>
+        <div>
+          <label><%= t('source_store') %></label>
+          <input type="text" name="source_store" value="<%= p.source_store || '' %>" dir="ltr" placeholder="Amazon, Jumia...">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="form-side">
+    <div class="card">
+      <h3 class="card-title"><%= t('pricing') %></h3>
+      <div class="form-row">
+        <label><%= t('original_price') %> (<%= t('hidden_from_customers') %>)</label>
+        <input type="number" step="0.01" name="original_price" id="orig-price" value="<%= p.original_price %>" dir="ltr">
+        <small class="muted">🔒 <%= t('original_price_hint') %></small>
+      </div>
+      <div class="form-row">
+        <label><%= t('selling_price') %> *</label>
+        <input type="number" step="0.01" name="selling_price" id="sell-price" value="<%= p.selling_price %>" required dir="ltr">
+      </div>
+      <div class="form-row">
+        <label><%= t('profit_calculator') %></label>
+        <div class="margin-tools">
+          <input type="number" id="margin-input" placeholder="%" min="0" max="500" dir="ltr">
+          <button type="button" class="btn btn-sm" id="apply-margin"><%= t('apply') %></button>
+        </div>
+        <small id="margin-preview" class="muted"></small>
+      </div>
+      <div class="form-row">
+        <label><%= t('cost_price') %> (<%= t('internal_only') %>)</label>
+        <input type="number" step="0.01" name="cost_price" value="<%= p.cost_price || 0 %>" dir="ltr">
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title"><%= t('inventory') %></h3>
+      <div class="form-row">
+        <label><%= t('sku') %></label>
+        <input type="text" name="sku" value="<%= p.sku || '' %>" dir="ltr">
+      </div>
+      <div class="form-row">
+        <label><%= t('stock') %></label>
+        <input type="number" name="stock" value="<%= p.stock %>" min="0" dir="ltr">
+      </div>
+      <div class="form-row">
+        <label><%= t('category') %></label>
+        <select name="category_id">
+          <option value="">— <%= t('none') %> —</option>
+          <% categories.forEach(function(c){ %>
+            <option value="<%= c.id %>" <%= p.category_id == c.id ? 'selected' : '' %>>
+              <%= c.name_ar %><% if (c.name_fr) { %> / <%= c.name_fr %><% } %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title"><%= t('publish') %></h3>
+      <div class="form-row">
+        <label class="radio">
+          <input type="radio" name="status" value="draft" <%= p.status === 'draft' ? 'checked' : '' %>>
+          <%= t('product_status_draft') %>
+        </label>
+        <label class="radio">
+          <input type="radio" name="status" value="published" <%= p.status === 'published' ? 'checked' : '' %>>
+          <%= t('product_status_published') %>
+        </label>
+      </div>
+      <div class="form-row">
+        <label class="check">
+          <input type="checkbox" name="featured" <%= p.featured ? 'checked' : '' %>>
+          <%= t('featured') %>
+        </label>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block"><%= isEdit ? t('save') : t('create') %></button>
+      <% if (isEdit) { %>
+        <a class="btn btn-ghost btn-block" href="/p/<%= p.id %>" target="_blank"><%= t('view_public') %></a>
+      <% } %>
+    </div>
+  </aside>
+</form>
+
+<script>
+  // margin calculator
+  (function(){
+    const orig = document.getElementById('orig-price');
+    const sell = document.getElementById('sell-price');
+    const mi = document.getElementById('margin-input');
+    const mp = document.getElementById('margin-preview');
+    const btn = document.getElementById('apply-margin');
+    function update(){
+      const o = parseFloat(orig.value) || 0;
+      const s = parseFloat(sell.value) || 0;
+      if (o > 0) {
+        const m = ((s - o) / o) * 100;
+        mp.textContent = (m >= 0 ? '+' : '') + m.toFixed(1) + '%';
+      } else {
+        mp.textContent = '';
+      }
+    }
+    function apply(){
+      const o = parseFloat(orig.value) || 0;
+      const m = parseFloat(mi.value) || 0;
+      if (o > 0) {
+        const v = Math.round(o * (1 + m / 100) * 100) / 100;
+        sell.value = v;
+        update();
+      }
+    }
+    if (orig && sell) {
+      orig.addEventListener('input', update);
+      sell.addEventListener('input', update);
+      if (btn) btn.addEventListener('click', apply);
+      update();
+    }
+  })();
+</script>
+
+<%- include('../partials/admin-footer') %>

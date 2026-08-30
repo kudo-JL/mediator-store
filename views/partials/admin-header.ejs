@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="<%= lang %>" dir="<%= dir %>">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title><%= typeof title !== 'undefined' ? title + ' | ' + t('admin_panel') : t('admin_panel') %></title>
+  <link rel="stylesheet" href="/static/css/admin.css">
+  <link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/images/favicon-32.png">
+  <link rel="apple-touch-icon" href="/static/images/apple-touch-icon.png">
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Admin">
+  <meta name="mobile-web-app-capable" content="yes">
+</head>
+<body class="lang-<%= lang %> dir-<%= dir %> admin-body">
+<header class="admin-topbar">
+  <div class="admin-topbar-row">
+    <a class="admin-brand" href="/admin">
+      <span class="admin-brand-mark">◈</span>
+      <span><%= site.name %></span>
+      <span class="admin-tag">Admin</span>
+    </a>
+    <div class="admin-topbar-actions">
+      <a class="topbar-link" href="/" target="_blank">↗ <%= t('view_store') %></a>
+      <span class="topbar-user">👤 <%= currentAdmin ? currentAdmin.username : '' %></span>
+      <a class="topbar-link" href="/admin/logout"><%= t('logout') %></a>
+      <div class="lang-switch small">
+        <% supportedLangs.forEach(function(c){ %>
+          <a class="lang-link <%= c === lang ? 'active' : '' %>" href="/lang/<%= c %>?next=<%= encodeURIComponent(currentPath) %>"><%= LangName[c] %></a>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+</header>
+<% if (flash) { %>
+  <div class="flash flash-<%= flash.type %>"><%= flash.message %></div>
+<% } %>
+<div class="admin-shell">
+  <%- include('admin-sidebar') %>
+  <main class="admin-main">

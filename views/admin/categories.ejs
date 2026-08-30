@@ -1,0 +1,87 @@
+<%- include('../partials/admin-header') %>
+
+<div class="page-head">
+  <h1 class="page-title"><%= t('categories') %></h1>
+</div>
+
+<div class="grid-2">
+  <section class="card">
+    <h3 class="card-title"><%= t('all_categories') %></h3>
+    <% if (categories.length === 0) { %>
+      <div class="empty small"><%= t('no_categories') %></div>
+    <% } else { %>
+      <table class="data-table">
+        <thead><tr><th><%= t('name_ar') %></th><th>FR</th><th>EN</th><th>slug</th><th></th></tr></thead>
+        <tbody>
+          <% categories.forEach(function(c){ %>
+            <tr>
+              <td><%= c.name_ar %></td>
+              <td class="muted"><%= c.name_fr || '—' %></td>
+              <td class="muted"><%= c.name_en || '—' %></td>
+              <td><code><%= c.slug %></code></td>
+              <td class="actions">
+                <button class="btn btn-sm" type="button" data-edit-cat='<%= JSON.stringify(c) %>'>✎</button>
+                <form method="post" action="/admin/categories/<%= c.id %>/delete" style="display:inline" onsubmit="return confirm('<%= t('confirm_delete') %>')">
+                  <button class="btn btn-sm danger" type="submit">🗑</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </section>
+
+  <aside class="card">
+    <h3 class="card-title" id="cat-form-title"><%= t('new_category') %></h3>
+    <form id="cat-form" method="post" action="/admin/categories/save">
+      <input type="hidden" name="id" id="cat-id">
+      <div class="form-row">
+        <label><%= t('name_ar') %> *</label>
+        <input type="text" name="name_ar" id="cat-name-ar" required>
+      </div>
+      <div class="form-row two">
+        <div>
+          <label><%= t('name_fr') %></label>
+          <input type="text" name="name_fr" id="cat-name-fr" dir="ltr">
+        </div>
+        <div>
+          <label><%= t('name_en') %></label>
+          <input type="text" name="name_en" id="cat-name-en" dir="ltr">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>slug</label>
+        <input type="text" name="slug" id="cat-slug" dir="ltr" placeholder="auto">
+      </div>
+      <button class="btn btn-primary" type="submit"><%= t('save') %></button>
+      <button class="btn btn-ghost" type="button" id="cat-reset"><%= t('reset') %></button>
+    </form>
+  </aside>
+</div>
+
+<script>
+  (function(){
+    const form = document.getElementById('cat-form');
+    const title = document.getElementById('cat-form-title');
+    document.querySelectorAll('[data-edit-cat]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        const c = JSON.parse(btn.getAttribute('data-edit-cat'));
+        document.getElementById('cat-id').value = c.id;
+        document.getElementById('cat-name-ar').value = c.name_ar;
+        document.getElementById('cat-name-fr').value = c.name_fr || '';
+        document.getElementById('cat-name-en').value = c.name_en || '';
+        document.getElementById('cat-slug').value = c.slug;
+        title.textContent = '<%= t('edit_category') %>';
+        window.scrollTo({ top: form.offsetTop - 80, behavior: 'smooth' });
+      });
+    });
+    document.getElementById('cat-reset').addEventListener('click', function(){
+      form.reset();
+      document.getElementById('cat-id').value = '';
+      title.textContent = '<%= t('new_category') %>';
+    });
+  })();
+</script>
+
+<%- include('../partials/admin-footer') %>

@@ -1,0 +1,55 @@
+<%- include('../partials/header') %>
+
+<section class="container section">
+  <h1 class="page-title"><%= t('cart') %></h1>
+  <% if (cart.items.length === 0) { %>
+    <div class="empty">
+      <p><%= t('cart_empty') %></p>
+      <a href="/" class="btn btn-primary"><%= t('continue_shopping') %></a>
+    </div>
+  <% } else { %>
+    <div class="cart-wrap">
+      <table class="cart-table">
+        <thead>
+          <tr>
+            <th colspan="2"><%= t('product') %></th>
+            <th><%= t('price') %></th>
+            <th><%= t('quantity') %></th>
+            <th><%= t('line_total') %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% cart.items.forEach(function(it){ %>
+            <tr data-product-id="<%= it.product_id %>">
+              <td class="ct-img">
+                <% if (it.image_path) { %><img src="<%= it.image_path %>" alt=""><% } %>
+              </td>
+              <td><%= it.name %></td>
+              <td><%= fmtPrice(it.unit_price) %></td>
+              <td>
+                <input type="number" class="cart-qty" value="<%= it.quantity %>" min="0" data-product-id="<%= it.product_id %>">
+              </td>
+              <td class="line-total"><%= fmtPrice(it.unit_price * it.quantity) %></td>
+              <td>
+                <button class="btn btn-ghost cart-remove" data-product-id="<%= it.product_id %>">✕</button>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4" class="ar"><%= t('subtotal') %></td>
+            <td colspan="2"><strong id="cart-subtotal"><%= fmtPrice(subtotal) %></strong></td>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="cart-actions">
+        <a href="/" class="btn btn-ghost"><%= t('continue_shopping') %></a>
+        <a href="/checkout" class="btn btn-primary btn-lg"><%= t('proceed_to_checkout') %></a>
+      </div>
+    </div>
+  <% } %>
+</section>
+
+<%- include('../partials/footer') %>

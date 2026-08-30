@@ -1,0 +1,15 @@
+# nixpacks.toml
+# Optional. Tells Coolify/Nixpacks exactly how to build this Node app.
+# If you use Dockerfile instead, this file is ignored.
+
+[phases.setup]
+aptPkgs = ["python3", "build-essential"]
+
+[phases.install]
+cmds = ["npm ci --omit=dev || npm install --omit=dev"]
+
+[phases.build]
+cmds = ["echo 'No build step needed'"]
+
+[start]
+cmd = "node server.js"
