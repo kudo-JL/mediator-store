@@ -32,7 +32,6 @@
   "confirm_delete": "Confirm delete?",
   "toggle_publish": "Toggle publish",
   "view_public": "View public page",
-
   "hero_title": "Discover the best products at our prices",
   "hero_sub": "We import the best products worldwide and resell them at competitive prices with fast delivery.",
   "categories": "Categories",
@@ -45,7 +44,6 @@
   "no_products_yet": "No products yet.",
   "no_products_in_category": "No products in this category.",
   "no_image": "No image",
-
   "product": "Product",
   "products": "Products",
   "new_product": "New product",
@@ -83,7 +81,6 @@
   "publish": "Publish",
   "featured": "Featured",
   "from": "From",
-
   "add_to_cart": "Add to cart",
   "added_to_cart": "Added to cart",
   "quantity": "Quantity",
@@ -91,7 +88,6 @@
   "out_of_stock": "Out of stock",
   "only_left": "Only {n} left",
   "related_products": "Related products",
-
   "cart_empty": "Your cart is empty.",
   "continue_shopping": "Continue shopping",
   "price": "Price",
@@ -100,7 +96,6 @@
   "shipping": "Shipping",
   "total": "Total",
   "proceed_to_checkout": "Proceed to checkout",
-
   "checkout": "Checkout",
   "customer_info": "Customer info",
   "full_name": "Full name",
@@ -126,7 +121,6 @@
   "drafts": "Drafts",
   "pending_orders": "Pending orders",
   "latest_orders": "Latest orders",
-  "latest_products": "Latest products",
   "dashboard": "Dashboard",
   "import_by_url": "Import by URL",
   "settings": "Settings",
@@ -145,14 +139,12 @@
   "contact_us": "Contact us",
   "quick_links": "Quick links",
   "footer_default": "Your favorite store to discover the best products at competitive prices.",
-
   "order_received": "Order received!",
   "back_to_shop": "Back to shop",
   "confirm_via_whatsapp": "Confirm via WhatsApp",
   "contact_via_whatsapp": "Contact customer via WhatsApp",
   "whatsapp_order_msg": "Hello, I confirm my order #{num} for {total}",
   "whatsapp_customer_msg": "Hello, regarding your order #{num}…",
-
   "notifications_title": "Order notifications",
   "notifications_intro": "Get an instant alert on Telegram and/or WhatsApp every time a new order comes in. Optional setup — only works when you enable a channel and fill the correct values.",
   "notifications_setup_guide": "Step-by-step setup guide",
@@ -168,7 +160,6 @@
   "callmebot_phone_help": "Your number with country code (e.g. +212600000000)",
   "callmebot_key_help": "The key you received from CallMeBot after activation",
   "test_whatsapp": "Send a test message",
-
   "order_status_pending": "Pending",
   "order_status_confirmed": "Confirmed",
   "order_status_shipped": "Shipped",
@@ -177,13 +168,11 @@
   "product_status_published": "Published",
   "product_status_draft": "Draft",
   "all_statuses": "All statuses",
-
   "paste_product_url": "Paste product URL",
   "import_hint": "Works with most stores (Amazon, Jumia, Noon, AliExpress…). Auto-extracts name, image, description and original price.",
   "fetch": "Fetch",
   "preview": "Preview",
   "add_to_store": "Add to store",
-
   "image_downloaded": "Image downloaded to server",
   "image_hotlink_only": "Download failed — image will be served from the source",
   "image_not_found": "No image found on the page",
@@ -194,7 +183,10 @@
   "image_candidates_hint": "Click an image to use it. The server will try to download it before saving.",
   "image_upload_fallback": "Or upload an image from your device",
   "image_upload_fallback_hint": "As a last resort, upload the image from your computer.",
-
   "not_found": "Page not found",
-  "server_error": "Server error"
+  "server_error": "Server error",
+  "legal_links": "Legal",
+  "privacy_policy": "Privacy Policy",
+  "terms_of_service": "Terms of Service",
+  "return_policy": "Return Policy"
 }

@@ -1,0 +1,123 @@
+<%- include('../partials/header') %>
+
+<style>
+  .legal-page { max-width: 880px; margin: 0 auto; padding: 32px 16px 80px; }
+  .legal-page h1 { font-size: 2rem; margin: 0 0 8px; }
+  .legal-page .meta { opacity: .7; margin-bottom: 32px; font-size: .9rem; }
+  .legal-page h2 { font-size: 1.4rem; margin: 32px 0 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(0,0,0,.1); }
+  .legal-page h3 { font-size: 1.1rem; margin: 20px 0 8px; }
+  .legal-page p { line-height: 1.7; margin: 0 0 12px; }
+  .legal-page ul, .legal-page ol { line-height: 1.7; padding-left: 24px; margin: 0 0 16px; }
+  .legal-page li { margin-bottom: 6px; }
+  .legal-page .info-box { background: rgba(37,99,235,.05); border-left: 3px solid #2563eb; padding: 16px; margin: 16px 0; border-radius: 4px; }
+  .legal-page .last-updated { display: inline-block; padding: 4px 10px; background: rgba(0,0,0,.05); border-radius: 4px; font-size: .85rem; }
+  .lang-switch { display: flex; gap: 8px; margin-bottom: 16px; font-size: .9rem; }
+  .lang-switch a { padding: 4px 12px; border: 1px solid rgba(0,0,0,.1); border-radius: 4px; text-decoration: none; opacity: .7; }
+  .lang-switch a.active { background: #2563eb; color: #fff; opacity: 1; border-color: #2563eb; }
+</style>
+
+<main class="legal-page" dir="<%= dir %>" lang="<%= lang %>">
+  <div class="lang-switch">
+    <a href="/terms?lang=ar" class="<%= lang === 'ar' ? 'active' : '' %>">العربية</a>
+    <a href="/terms?lang=fr" class="<%= lang === 'fr' ? 'active' : '' %>">Français</a>
+    <a href="/terms?lang=en" class="<%= lang === 'en' ? 'active' : '' %>">English</a>
+  </div>
+
+  <h1>Terms of Service</h1>
+  <p class="meta"><span class="last-updated">Last updated: August 31, 2026</span></p>
+
+  <h2>1. Acceptance of Terms</h2>
+  <p>By using <strong>Mediator Store</strong> (store.lotfi.ma), you agree to these terms and conditions. If you do not agree, please do not use the site.</p>
+
+  <div class="info-box">
+    <p><strong>Business Legal Information:</strong></p>
+    <ul>
+      <li>📋 <strong>Legal Status:</strong> Auto-entrepreneur (Self-employed)</li>
+      <li>🆔 <strong>Unique Business ID:</strong> 00403017600042</li>
+      <li>💼 <strong>Tax ID (IF):</strong> 73333808</li>
+      <li>🆔 <strong>National ID (CNIE):</strong> 12404638</li>
+      <li>📅 <strong>Registration Date:</strong> August 28, 2026</li>
+    </ul>
+  </div>
+
+  <h2>2. Service Description</h2>
+  <p>Mediator Store is an online store selling various products to customers in Morocco. The service is available to adults (18+) capable of entering into legal contracts.</p>
+
+  <h2>3. Orders</h2>
+  <h3>3.1 Placing an Order</h3>
+  <ul>
+    <li>You can browse products and add them to the cart without creating an account.</li>
+    <li>When confirming the order, we ask for <strong>full name, phone number, and delivery address</strong>.</li>
+    <li>Providing incorrect information may result in order cancellation.</li>
+  </ul>
+
+  <h3>3.2 Order Confirmation</h3>
+  <p>After your confirmation, you will receive a call or Telegram/WhatsApp message to verify the details. The order becomes <strong>binding</strong> only after our confirmation.</p>
+
+  <h2>4. Prices and Payment</h2>
+  <ul>
+    <li>Prices are in Moroccan Dirhams (MAD) and include <strong>taxes</strong> where applicable.</li>
+    <li><strong>Cash on delivery</strong> only — we do not accept electronic payment.</li>
+    <li>Prices may change without notice, but the final price is the one you saw at confirmation.</li>
+  </ul>
+
+  <h2>5. Delivery</h2>
+  <ul>
+    <li>We deliver only within <strong>Morocco</strong>.</li>
+    <li>Delivery time: <strong>2 to 7 business days</strong> depending on the area.</li>
+    <li>Delivery fees are calculated at order confirmation and shown on the invoice.</li>
+    <li>Delays due to circumstances beyond our control (weather, strikes, holidays) do not entitle you to compensation.</li>
+  </ul>
+
+  <h2>6. Returns and Refunds</h2>
+  <p>For return details, see our <a href="/return">return policy</a>.</p>
+
+  <h2>7. User Obligations</h2>
+  <p>By using the site, you agree to:</p>
+  <ul>
+    <li>✅ Provide accurate information.</li>
+    <li>✅ Not use the site for illegal purposes.</li>
+    <li>✅ Not attempt to hack or disable the site.</li>
+    <li>✅ Not copy content without permission.</li>
+  </ul>
+
+  <h2>8. Intellectual Property</h2>
+  <p>All content (texts, images, logos, design) is the property of <strong>Mediator Store</strong> and protected by intellectual property laws. Copying or using without prior written permission is prohibited.</p>
+
+  <h2>9. Limitation of Liability</h2>
+  <div class="info-box">
+    <p><strong>Mediator Store is not responsible for:</strong></p>
+    <ul>
+      <li>Indirect damages resulting from the use of the site.</li>
+      <li>Content of linked external sites.</li>
+      <li>Delivery delays due to force majeure.</li>
+      <li>Temporary technical failures of the site.</li>
+    </ul>
+  </div>
+  <p>Our maximum liability is limited to the <strong>value of the order</strong>.</p>
+
+  <h2>10. Governing Law</h2>
+  <p>These terms are governed by <strong>Moroccan law</strong>, and any dispute will be resolved by the courts of <strong>Morocco</strong>, subject to:</p>
+  <ul>
+    <li>Moroccan consumer protection (Law 31-08).</li>
+    <li>Moroccan e-commerce law.</li>
+    <li>GDPR (since hosting is in France).</li>
+  </ul>
+
+  <h2>11. Modifications</h2>
+  <p>We may modify these terms at any time. Modifications are posted on this page with the date updated. Your continued use of the site after changes means you accept them.</p>
+
+  <h2>12. Termination</h2>
+  <p>We may suspend or interrupt the site temporarily for maintenance or any technical reason, without prior notice.</p>
+
+  <h2>13. Contact</h2>
+  <p>For any question regarding these terms:</p>
+  <ul>
+    <li>📧 <strong>support@lotfi.ma</strong></li>
+    <li>📞 <strong>+212 693 016 974</strong> (Telegram / WhatsApp)</li>
+  </ul>
+
+  <p style="margin-top: 40px; text-align: center; opacity: .7;">Thank you for using Mediator Store 🛒</p>
+</main>
+
+<%- include('../partials/footer') %>

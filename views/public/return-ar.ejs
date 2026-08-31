@@ -1,0 +1,149 @@
+<%- include('../partials/header') %>
+
+<style>
+  .legal-page { max-width: 880px; margin: 0 auto; padding: 32px 16px 80px; }
+  .legal-page h1 { font-size: 2rem; margin: 0 0 8px; }
+  .legal-page .meta { opacity: .7; margin-bottom: 32px; font-size: .9rem; }
+  .legal-page h2 { font-size: 1.4rem; margin: 32px 0 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(0,0,0,.1); }
+  .legal-page h3 { font-size: 1.1rem; margin: 20px 0 8px; }
+  .legal-page p { line-height: 1.7; margin: 0 0 12px; }
+  .legal-page ul, .legal-page ol { line-height: 1.7; padding-<%= dir === 'rtl' ? 'right' : 'left' %>: 24px; margin: 0 0 16px; }
+  .legal-page li { margin-bottom: 6px; }
+  .legal-page .info-box { background: rgba(37,99,235,.05); border-<%= dir === 'rtl' ? 'right' : 'left' %>: 3px solid #2563eb; padding: 16px; margin: 16px 0; border-radius: 4px; }
+  .legal-page .warning-box { background: rgba(234,88,12,.05); border-<%= dir === 'rtl' ? 'right' : 'left' %>: 3px solid #ea580c; padding: 16px; margin: 16px 0; border-radius: 4px; }
+  .legal-page table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: .95rem; }
+  .legal-page th, .legal-page td { padding: 10px 12px; border: 1px solid rgba(0,0,0,.1); text-align: <%= dir === 'rtl' ? 'right' : 'left' %>; }
+  .legal-page th { background: rgba(0,0,0,.04); font-weight: 600; }
+  .legal-page .last-updated { display: inline-block; padding: 4px 10px; background: rgba(0,0,0,.05); border-radius: 4px; font-size: .85rem; }
+  .lang-switch { display: flex; gap: 8px; margin-bottom: 16px; font-size: .9rem; }
+  .lang-switch a { padding: 4px 12px; border: 1px solid rgba(0,0,0,.1); border-radius: 4px; text-decoration: none; opacity: .7; }
+  .lang-switch a.active { background: #2563eb; color: #fff; opacity: 1; border-color: #2563eb; }
+</style>
+
+<main class="legal-page" dir="<%= dir %>" lang="<%= lang %>">
+  <div class="lang-switch">
+    <a href="/return?lang=ar" class="<%= lang === 'ar' ? 'active' : '' %>">العربية</a>
+    <a href="/return?lang=fr" class="<%= lang === 'fr' ? 'active' : '' %>">Français</a>
+    <a href="/return?lang=en" class="<%= lang === 'en' ? 'active' : '' %>">English</a>
+  </div>
+
+  <h1>سياسة الإرجاع والاسترداد</h1>
+  <p class="meta"><span class="last-updated">آخر تحديث: 31 أغسطس 2026</span></p>
+
+  <div class="info-box">
+    <p><strong>المعلومات القانونية للمقاول:</strong></p>
+    <ul>
+      <li>📋 <strong>الصفة:</strong> مقاول ذاتي (Auto-entrepreneur)</li>
+      <li>🆔 <strong>رقم المقاولة:</strong> 00403017600042</li>
+      <li>💼 <strong>الرقم الضريبي (IF):</strong> 73333808</li>
+    </ul>
+  </div>
+
+  <h2>1. حقك في الإرجاع</h2>
+  <p>في <strong>متجر الوسيط</strong>، نسعى لرضاك التام. يمكنك إرجاع المنتج في الحالات التالية:</p>
+  <ul>
+    <li>✅ المنتج <strong>معيب أو تالف</strong> عند الاستلام.</li>
+    <li>✅ المنتج <strong>مختلف عن الوصف</strong> على الموقع.</li>
+    <li>✅ استلمت <strong>منتجاً خاطئاً</strong>.</li>
+    <li>✅ تغيير رأيك خلال <strong>24 ساعة</strong> من الاستلام (بشروط).</li>
+  </ul>
+
+  <h2>2. شروط الإرجاع</h2>
+  <p>لكي نقبل إرجاع المنتج، يجب:</p>
+  <ul>
+    <li>📦 المنتج في <strong>حالته الأصلية</strong> (غير مستخدم، غير مفتوح، مع كل الملحقات).</li>
+    <li>📅 خلال <strong>7 أيام</strong> من تاريخ الاستلام.</li>
+    <li>📄 وجود <strong>فاتورة الشراء</strong>.</li>
+    <li>📸 إرسال <strong>صور واضحة</strong> للمنتج المعيب (عند الإرجاع بسبب عيب).</li>
+  </ul>
+
+  <h2>3. منتجات لا يمكن إرجاعها</h2>
+  <div class="warning-box">
+    <p><strong>لا يمكن إرجاع المنتجات التالية:</strong></p>
+    <ul>
+      <li>❌ المنتجات <strong>المستخدمة أو المفتوحة</strong> (باستثناء العيوب).</li>
+      <li>❌ المنتجات <strong>النظيفة أو الشخصية</strong> (ملابس داخلية، مستحضرات تجميل).</li>
+      <li>❌ المنتجات <strong>القابلة للتلف</strong> (أغذية، أدوية).</li>
+      <li>❌ المنتجات <strong>المصنوعة حسب الطلب</strong>.</li>
+      <li>❌ المنتجات التي تم <strong>استخدامها بشكل واضح</strong>.</li>
+    </ul>
+  </div>
+
+  <h2>4. آلية الإرجاع</h2>
+  <h3>الخطوة 1: تواصل معنا</h3>
+  <p>عبر إحدى الطرق التالية:</p>
+  <ul>
+    <li>📧 إيميل: <strong>support@lotfi.ma</strong></li>
+    <li>📞 هاتف/تليجرام: <strong>+212 693 016 974</strong></li>
+  </ul>
+  <p>أرسل لنا:</p>
+  <ul>
+    <li>رقم الطلب</li>
+    <li>سبب الإرجاع</li>
+    <li>صور المنتج (إن وجد عيب)</li>
+  </ul>
+
+  <h3>الخطوة 2: الموافقة</h3>
+  <p>سنرد عليك خلال <strong>48 ساعة</strong> عمل. لو تمت الموافقة، نعطيك تعليمات الإرجاع.</p>
+
+  <h3>الخطوة 3: شحن المنتج</h3>
+  <p>تعيد إلينا المنتج خلال <strong>5 أيام</strong> من الموافقة. رسوم الشحن:</p>
+  <table>
+    <tr><th>السبب</th><th>من يتحمل رسوم الشحن؟</th></tr>
+    <tr><td>عيب في المنتج</td><td><strong>متجر الوسيط</strong> (نرسل مندوب)</td></tr>
+    <tr><td>منتج خاطئ</td><td><strong>متجر الوسيط</strong></td></tr>
+    <tr><td>تغيير رأي</td><td><strong>الزبون</strong></td></tr>
+  </table>
+
+  <h3>الخطوة 4: الاسترداد</h3>
+  <p>بعد استلامنا وفحص المنتج:</p>
+  <ul>
+    <li>إذا كان الإرجاع <strong>بسبب خطأنا</strong>: نرجع لك المبلغ كاملاً + رسوم الشحن خلال <strong>7 أيام عمل</strong>.</li>
+    <li>إذا كان <strong>تغيير رأي</strong>: نرجع المبلغ (بدون رسوم الشحن) خلال <strong>7 أيام عمل</strong>.</li>
+  </ul>
+  <p><strong>طريقة الاسترداد</strong>: نقداً عند استلامنا للمنتج، أو تحويل بنكي (حسب الاتفاق).</p>
+
+  <h2>5. إلغاء الطلب قبل الشحن</h2>
+  <p>يمكنك إلغاء طلبك <strong>قبل شحنه</strong> بدون أي رسوم. تواصل معنا فوراً على:</p>
+  <ul>
+    <li>📧 <strong>support@lotfi.ma</strong></li>
+    <li>📞 <strong>+212 693 016 974</strong></li>
+  </ul>
+
+  <h2>6. منتجات تالفة أو ناقصة عند الاستلام</h2>
+  <p>إذا استلمت منتجاً تالفاً أو ناقصاً:</p>
+  <ol>
+    <li><strong>لا تستلم</strong> المنتج من المندوب (ارفض الاستلام).</li>
+    <li>أو استلمه <strong>وأرسل لنا صوراً فورية</strong> للمنتج التالف.</li>
+    <li>سنرسل لك <strong>منتجاً بديلاً</strong> مجاناً خلال 48 ساعة، أو نرجع لك المبلغ كاملاً.</li>
+  </ol>
+
+  <h2>7. الاستبدال</h2>
+  <p>في بعض الحالات، يمكنك استبدال المنتج بمنتج آخر:</p>
+  <ul>
+    <li>✅ إذا كان المنتج <strong>معيباً</strong>: استبدال مجاني.</li>
+    <li>✅ إذا كنت تريد <strong>مقاساً/لوناً آخر</strong>: ممكن، لكن الزبون يتحمل رسوم الشحن.</li>
+  </ul>
+
+  <h2>8. الحالات الخاصة</h2>
+  <h3>العروض والتخفيضات</h3>
+  <p>المنتجات المشتراة <strong>بعرض خاص</strong> يمكن إرجاعها بنفس الشروط، لكن قد يكون الاسترداد <strong>بقيمة الشراء الأصلية</strong> فقط.</p>
+
+  <h3>الهدايا</h3>
+  <p>إذا كان المنتج هدية، يمكن للمستلم إرجاعه بنفس الشروط.</p>
+
+  <h2>9. تواصل</h2>
+  <p>لأي سؤال حول الإرجاع أو الاسترداد:</p>
+  <ul>
+    <li>📧 <strong>support@lotfi.ma</strong></li>
+    <li>📞 <strong>+212 693 016 974</strong> (تليجرام / واتساب)</li>
+  </ul>
+  <p>نرد خلال <strong>24 ساعة</strong> عمل.</p>
+
+  <h2>10. القانون المعمول به</h2>
+  <p>تخضع هذه السياسة لـ <strong>قانون حماية المستهلك المغربي 31-08</strong>، مع مراعاة GDPR للزبائن في أوروبا.</p>
+
+  <p style="margin-top: 40px; text-align: center; opacity: .7;">شكراً لثقتك بمتجر الوسيط 🛒</p>
+</main>
+
+<%- include('../partials/footer') %>

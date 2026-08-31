@@ -1,0 +1,123 @@
+<%- include('../partials/header') %>
+
+<style>
+  .legal-page { max-width: 880px; margin: 0 auto; padding: 32px 16px 80px; }
+  .legal-page h1 { font-size: 2rem; margin: 0 0 8px; }
+  .legal-page .meta { opacity: .7; margin-bottom: 32px; font-size: .9rem; }
+  .legal-page h2 { font-size: 1.4rem; margin: 32px 0 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(0,0,0,.1); }
+  .legal-page h3 { font-size: 1.1rem; margin: 20px 0 8px; }
+  .legal-page p { line-height: 1.7; margin: 0 0 12px; }
+  .legal-page ul, .legal-page ol { line-height: 1.7; padding-left: 24px; margin: 0 0 16px; }
+  .legal-page li { margin-bottom: 6px; }
+  .legal-page .info-box { background: rgba(37,99,235,.05); border-left: 3px solid #2563eb; padding: 16px; margin: 16px 0; border-radius: 4px; }
+  .legal-page .last-updated { display: inline-block; padding: 4px 10px; background: rgba(0,0,0,.05); border-radius: 4px; font-size: .85rem; }
+  .lang-switch { display: flex; gap: 8px; margin-bottom: 16px; font-size: .9rem; }
+  .lang-switch a { padding: 4px 12px; border: 1px solid rgba(0,0,0,.1); border-radius: 4px; text-decoration: none; opacity: .7; }
+  .lang-switch a.active { background: #2563eb; color: #fff; opacity: 1; border-color: #2563eb; }
+</style>
+
+<main class="legal-page" dir="<%= dir %>" lang="<%= lang %>">
+  <div class="lang-switch">
+    <a href="/terms?lang=ar" class="<%= lang === 'ar' ? 'active' : '' %>">العربية</a>
+    <a href="/terms?lang=fr" class="<%= lang === 'fr' ? 'active' : '' %>">Français</a>
+    <a href="/terms?lang=en" class="<%= lang === 'en' ? 'active' : '' %>">English</a>
+  </div>
+
+  <h1>Conditions d'Utilisation</h1>
+  <p class="meta"><span class="last-updated">Dernière mise à jour : 31 août 2026</span></p>
+
+  <h2>1. Acceptation des conditions</h2>
+  <p>En utilisant le site <strong>Mediator Store</strong> (store.lotfi.ma), vous acceptez ces conditions générales. Si vous n'êtes pas d'accord, veuillez ne pas utiliser le site.</p>
+
+  <div class="info-box">
+    <p><strong>Informations légales de l'entrepreneur :</strong></p>
+    <ul>
+      <li>📋 <strong>Statut :</strong> Auto-entrepreneur</li>
+      <li>🆔 <strong>Numéro unique d'entreprise :</strong> 00403017600042</li>
+      <li>💼 <strong>Identifiant fiscal (IF) :</strong> 73333808</li>
+      <li>🆔 <strong>Numéro CNIE :</strong> 12404638</li>
+      <li>📅 <strong>Date d'enregistrement :</strong> 28 août 2026</li>
+    </ul>
+  </div>
+
+  <h2>2. Description du service</h2>
+  <p>Mediator Store est une boutique en ligne vendant divers produits aux clients au Maroc. Le service est destiné aux adultes (18 ans et plus) capables de conclure des contrats légalement.</p>
+
+  <h2>3. Commandes</h2>
+  <h3>3.1 Passer une commande</h3>
+  <ul>
+    <li>Vous pouvez parcourir les produits et les ajouter au panier sans créer de compte.</li>
+    <li>Lors de la confirmation, nous vous demandons <strong>nom complet, téléphone et adresse de livraison</strong>.</li>
+    <li>Des informations incorrectes peuvent entraîner l'annulation de la commande.</li>
+  </ul>
+
+  <h3>3.2 Confirmation de la commande</h3>
+  <p>Après confirmation, vous recevrez un appel ou un message sur Telegram/WhatsApp pour vérifier les détails. La commande devient <strong>contraignante</strong> uniquement après notre confirmation.</p>
+
+  <h2>4. Prix et paiement</h2>
+  <ul>
+    <li>Les prix sont en dirhams marocains (MAD) et incluent les <strong>taxes</strong> le cas échéant.</li>
+    <li><strong>Paiement en espèces à la livraison</strong> uniquement — nous n'acceptons pas le paiement électronique.</li>
+    <li>Les prix peuvent changer sans préavis, mais le prix final est celui vu lors de la confirmation.</li>
+  </ul>
+
+  <h2>5. Livraison</h2>
+  <ul>
+    <li>Nous livrons uniquement au <strong>Maroc</strong>.</li>
+    <li>Délai de livraison : <strong>2 à 7 jours ouvrés</strong> selon la zone.</li>
+    <li>Les frais de livraison sont calculés à la confirmation et figurent sur la facture.</li>
+    <li>Les retards dus à des circonstances indépendantes de notre volonté (météo, grèves, fêtes) n'ouvrent pas droit à indemnisation.</li>
+  </ul>
+
+  <h2>6. Retour et remboursement</h2>
+  <p>Pour les détails sur les retours, consultez notre <a href="/return">politique de retour</a>.</p>
+
+  <h2>7. Obligations de l'utilisateur</h2>
+  <p>En utilisant le site, vous vous engagez à :</p>
+  <ul>
+    <li>✅ Fournir des informations exactes.</li>
+    <li>✅ Ne pas utiliser le site à des fins illégales.</li>
+    <li>✅ Ne pas tenter de pirater ou désactiver le site.</li>
+    <li>✅ Ne pas copier le contenu sans autorisation.</li>
+  </ul>
+
+  <h2>8. Propriété intellectuelle</h2>
+  <p>Tout le contenu (textes, images, logos, design) est la propriété de <strong>Mediator Store</strong> et protégé par les lois sur la propriété intellectuelle. Toute copie ou utilisation sans autorisation écrite est interdite.</p>
+
+  <h2>9. Limitation de responsabilité</h2>
+  <div class="info-box">
+    <p><strong>Mediator Store n'est pas responsable :</strong></p>
+    <ul>
+      <li>Des dommages indirects résultant de l'utilisation du site.</li>
+      <li>Du contenu des sites externes liés.</li>
+      <li>Des retards de livraison dus à un cas de force majeure.</li>
+      <li>Des pannes techniques temporaires du site.</li>
+    </ul>
+  </div>
+  <p>Notre responsabilité maximale est limitée à la <strong>valeur de la commande</strong>.</p>
+
+  <h2>10. Droit applicable</h2>
+  <p>Ces conditions sont régies par le droit <strong>marocain</strong>, et tout litige sera tranché par les tribunaux du <strong>Maroc</strong>, sous réserve de :</p>
+  <ul>
+    <li>La protection du consommateur marocain (loi 31-08).</li>
+    <li>Le droit marocain du commerce électronique.</li>
+    <li>Le RGPD (car l'hébergement est en France).</li>
+  </ul>
+
+  <h2>11. Modifications</h2>
+  <p>Nous pouvons modifier ces conditions à tout moment. Les modifications sont publiées sur cette page avec mise à jour de la date. La poursuite de l'utilisation du site vaut acceptation.</p>
+
+  <h2>12. Résiliation</h2>
+  <p>Nous pouvons suspendre ou interrompre le site temporairement pour maintenance ou pour toute raison technique, sans préavis.</p>
+
+  <h2>13. Contact</h2>
+  <p>Pour toute question concernant ces conditions :</p>
+  <ul>
+    <li>📧 <strong>support@lotfi.ma</strong></li>
+    <li>📞 <strong>+212 693 016 974</strong> (Telegram / WhatsApp)</li>
+  </ul>
+
+  <p style="margin-top: 40px; text-align: center; opacity: .7;">Merci d'utiliser Mediator Store 🛒</p>
+</main>
+
+<%- include('../partials/footer') %>

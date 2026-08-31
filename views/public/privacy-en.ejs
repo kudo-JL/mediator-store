@@ -1,0 +1,192 @@
+<%- include('../partials/header') %>
+
+<style>
+  .legal-page { max-width: 880px; margin: 0 auto; padding: 32px 16px 80px; }
+  .legal-page h1 { font-size: 2rem; margin: 0 0 8px; }
+  .legal-page .meta { opacity: .7; margin-bottom: 32px; font-size: .9rem; }
+  .legal-page h2 { font-size: 1.4rem; margin: 32px 0 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(0,0,0,.1); }
+  .legal-page h3 { font-size: 1.1rem; margin: 20px 0 8px; }
+  .legal-page p { line-height: 1.7; margin: 0 0 12px; }
+  .legal-page ul, .legal-page ol { line-height: 1.7; padding-left: 24px; margin: 0 0 16px; }
+  .legal-page li { margin-bottom: 6px; }
+  .legal-page table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: .95rem; }
+  .legal-page th, .legal-page td { padding: 10px 12px; border: 1px solid rgba(0,0,0,.1); text-align: left; }
+  .legal-page th { background: rgba(0,0,0,.04); font-weight: 600; }
+  .legal-page .info-box { background: rgba(37,99,235,.05); border-left: 3px solid #2563eb; padding: 16px; margin: 16px 0; border-radius: 4px; }
+  .legal-page .last-updated { display: inline-block; padding: 4px 10px; background: rgba(0,0,0,.05); border-radius: 4px; font-size: .85rem; }
+  .lang-switch { display: flex; gap: 8px; margin-bottom: 16px; font-size: .9rem; }
+  .lang-switch a { padding: 4px 12px; border: 1px solid rgba(0,0,0,.1); border-radius: 4px; text-decoration: none; opacity: .7; }
+  .lang-switch a.active { background: #2563eb; color: #fff; opacity: 1; border-color: #2563eb; }
+</style>
+
+<main class="legal-page" dir="<%= dir %>" lang="<%= lang %>">
+  <div class="lang-switch">
+    <a href="/privacy?lang=ar" class="<%= lang === 'ar' ? 'active' : '' %>">العربية</a>
+    <a href="/privacy?lang=fr" class="<%= lang === 'fr' ? 'active' : '' %>">Français</a>
+    <a href="/privacy?lang=en" class="<%= lang === 'en' ? 'active' : '' %>">English</a>
+  </div>
+
+  <h1>Privacy Policy</h1>
+  <p class="meta"><span class="last-updated">Last updated: August 31, 2026</span></p>
+
+  <h2>1. Introduction</h2>
+  <p>Welcome to <strong>Mediator Store</strong> (متجر الوسيط). We respect your privacy and are committed to protecting your personal data. This policy explains how we collect, use, and protect your data, in compliance with:</p>
+  <ul>
+    <li><strong>The General Data Protection Regulation (GDPR)</strong> — because our operations transit through the European Union (hosting in France).</li>
+    <li><strong>Moroccan Law 09-08</strong> on the protection of personal data — because our customers are in Morocco.</li>
+  </ul>
+  <p>By using our website <code>https://store.lotfi.ma</code>, you agree to the practices described in this policy.</p>
+
+  <h2>2. Who We Are</h2>
+  <p><strong>Mediator Store</strong> (متجر الوسيط) — Online store selling various products to customers in Morocco, with cash on delivery.</p>
+  <div class="info-box">
+    <p><strong>Legal Information:</strong></p>
+    <ul>
+      <li>📋 <strong>Legal Status:</strong> Auto-entrepreneur (Self-employed)</li>
+      <li>🆔 <strong>Unique Business ID:</strong> 00403017600042</li>
+      <li>💼 <strong>Tax ID (IF):</strong> 73333808</li>
+      <li>🆔 <strong>National ID (CNIE):</strong> 12404638</li>
+      <li>📅 <strong>Registration Date:</strong> August 28, 2026</li>
+    </ul>
+  </div>
+  <table>
+    <tr><th>Item</th><th>Information</th></tr>
+    <tr><td>Owner</td><td>Lotfi (لطفي)</td></tr>
+    <tr><td>Email</td><td>support@lotfi.ma</td></tr>
+    <tr><td>Phone / Telegram</td><td>+212 693 016 974</td></tr>
+    <tr><td>Website</td><td>https://store.lotfi.ma</td></tr>
+    <tr><td>Hosting</td><td>Scaleway (Paris, France)</td></tr>
+  </table>
+
+  <h2>3. What Data Do We Collect?</h2>
+
+  <h3>3.1 Personal Data You Provide Voluntarily</h3>
+  <p>When placing an order, we collect:</p>
+  <ul>
+    <li><strong>Full name</strong> (first and last name)</li>
+    <li><strong>Phone number</strong> (to contact you about your order)</li>
+    <li><strong>Delivery address</strong> (street, city, postal code)</li>
+  </ul>
+
+  <h3>3.2 Data Collected Automatically</h3>
+  <ul>
+    <li><strong>IP address</strong></li>
+    <li><strong>Browser type and version</strong></li>
+    <li><strong>Operating system</strong></li>
+    <li><strong>Pages visited</strong></li>
+    <li><strong>Time and date</strong> of your visit</li>
+  </ul>
+
+  <h3>3.3 What We Do NOT Collect</h3>
+  <div class="info-box">
+    <ul>
+      <li>❌ <strong>No electronic payment data</strong> (no credit card, no PayPal). Payment is <strong>cash on delivery only</strong>.</li>
+      <li>❌ <strong>No customer email address</strong> (only for admin).</li>
+      <li>❌ <strong>No tracking or advertising cookies</strong>.</li>
+    </ul>
+  </div>
+
+  <h2>4. How Do We Use Your Data?</h2>
+  <p>We use your data <strong>only</strong> for:</p>
+  <table>
+    <tr><th>Purpose</th><th>Data Used</th></tr>
+    <tr><td>Order processing and delivery</td><td>Name, phone, address</td></tr>
+    <tr><td>Order communication</td><td>Phone, name</td></tr>
+    <tr><td>Admin notification via Telegram</td><td>Name, phone, address, order details</td></tr>
+    <tr><td>Site improvement and security</td><td>IP address, browser data</td></tr>
+    <tr><td>Legal compliance</td><td>Order invoices</td></tr>
+  </table>
+  <p><strong>We never sell your data to third parties.</strong></p>
+
+  <h2>5. Third Parties</h2>
+
+  <h3>5.1 Telegram Bot API (notifications)</h3>
+  <ul>
+    <li><strong>Purpose:</strong> Notify admin of new orders</li>
+    <li><strong>Data shared:</strong> Name, phone, address, order details</li>
+    <li><strong>Policy:</strong> <a href="https://telegram.org/privacy" target="_blank" rel="noopener">telegram.org/privacy</a></li>
+  </ul>
+
+  <h3>5.2 Scaleway (hosting)</h3>
+  <ul>
+    <li><strong>Purpose:</strong> Hosting the website and database</li>
+    <li><strong>Data:</strong> All data on Scaleway servers in Paris</li>
+  </ul>
+
+  <h3>5.3 Delivery carrier</h3>
+  <ul>
+    <li><strong>Purpose:</strong> Deliver the order to your address</li>
+    <li><strong>Data:</strong> Name, phone, address</li>
+  </ul>
+
+  <h2>6. Cookies</h2>
+  <p><strong>We do NOT use tracking or advertising cookies.</strong> Only essential cookies:</p>
+  <table>
+    <tr><th>Type</th><th>Purpose</th><th>Duration</th></tr>
+    <tr><td>Session cookie</td><td>Save shopping cart</td><td>Expires when browser closes</td></tr>
+    <tr><td>Session cookie</td><td>Admin login</td><td>Expires on logout</td></tr>
+  </table>
+
+  <h2>7. Data Retention</h2>
+  <table>
+    <tr><th>Data Type</th><th>Retention Period</th></tr>
+    <tr><td>Order data</td><td><strong>3 years</strong> (tax and accounting)</td></tr>
+    <tr><td>Admin login data</td><td>Until account deletion</td></tr>
+    <tr><td>Server logs (IP)</td><td><strong>12 months</strong></td></tr>
+    <tr><td>Uncompleted cart</td><td><strong>7 days</strong></td></tr>
+  </table>
+
+  <h2>8. International Data Transfer</h2>
+  <p>Your data is stored on <strong>Scaleway servers in Paris (France)</strong>. This international transfer is governed by <strong>GDPR</strong> and <strong>Moroccan Law 09-08</strong>. We ensure it is <strong>protected</strong> by data processing agreements with Scaleway.</p>
+
+  <h2>9. Your Rights</h2>
+  <table>
+    <tr><th>Right</th><th>Explanation</th></tr>
+    <tr><td>Right of access</td><td>Know what we have about you</td></tr>
+    <tr><td>Right of rectification</td><td>Correct your data</td></tr>
+    <tr><td>Right to erasure</td><td>Delete your data</td></tr>
+    <tr><td>Right to object</td><td>Object to data processing</td></tr>
+    <tr><td>Right to data portability</td><td>Receive a readable copy</td></tr>
+    <tr><td>Right to withdraw consent</td><td>Withdraw your consent</td></tr>
+  </table>
+
+  <div class="info-box">
+    <p><strong>To file a complaint:</strong></p>
+    <ul>
+      <li><strong>CNIL</strong> (France): <a href="https://www.cnil.fr" target="_blank" rel="noopener">www.cnil.fr</a></li>
+      <li><strong>CNDP</strong> (Morocco): <a href="https://www.cndp.ma" target="_blank" rel="noopener">www.cndp.ma</a></li>
+    </ul>
+  </div>
+
+  <h2>10. Data Security</h2>
+  <ul>
+    <li>✅ <strong>HTTPS / SSL</strong>: encrypted communications</li>
+    <li>✅ <strong>Encrypted passwords</strong> (bcrypt)</li>
+    <li>✅ <strong>Secure sessions</strong> (httpOnly)</li>
+    <li>✅ <strong>Cloudflare WAF</strong> + anti-DDoS</li>
+    <li>✅ <strong>Daily backups</strong></li>
+    <li>✅ <strong>Regular security updates</strong></li>
+  </ul>
+  <p>In case of a breach, we will notify you within 72 hours.</p>
+
+  <h2>11. Children's Privacy</h2>
+  <p>Our site is <strong>not directed to children under 16</strong>. If you are a parent and learn that your child has provided data, contact us immediately.</p>
+
+  <h2>12. Links to Other Sites</h2>
+  <p>Our site may contain external links (such as Telegram). <strong>We are not responsible</strong> for their privacy policies.</p>
+
+  <h2>13. Changes to This Policy</h2>
+  <p>We may update this policy. We will notify you via a prominent notice and update the date at the top.</p>
+
+  <h2>14. Contact Us</h2>
+  <table>
+    <tr><th>Method</th><th>Information</th></tr>
+    <tr><td>Email</td><td>support@lotfi.ma</td></tr>
+    <tr><td>Phone / Telegram</td><td>+212 693 016 974</td></tr>
+  </table>
+  <p>We will respond within a maximum of <strong>30 days</strong>.</p>
+
+  <p style="margin-top: 40px; text-align: center; opacity: .7;">Thank you for your trust in Mediator Store 🛒</p>
+</main>
+
+<%- include('../partials/footer') %>

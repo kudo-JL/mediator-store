@@ -32,7 +32,6 @@
   "confirm_delete": "Confirmer la suppression ?",
   "toggle_publish": "Basculer la publication",
   "view_public": "Voir la page publique",
-
   "hero_title": "Découvrez les meilleurs produits à nos prix",
   "hero_sub": "Nous importons les meilleurs produits du monde et les vendons à des prix compétitifs avec une livraison rapide.",
   "categories": "Catégories",
@@ -41,11 +40,10 @@
   "edit_category": "Modifier la catégorie",
   "no_categories": "Aucune catégorie pour l'instant.",
   "featured_products": "Produits en vedette",
-  "latest_products": "Nouveaux produits",
+  "latest_products": "Derniers produits",
   "no_products_yet": "Aucun produit pour l'instant.",
   "no_products_in_category": "Aucun produit dans cette catégorie.",
   "no_image": "Pas d'image",
-
   "product": "Produit",
   "products": "Produits",
   "new_product": "Nouveau produit",
@@ -83,7 +81,6 @@
   "publish": "Publier",
   "featured": "En vedette",
   "from": "De",
-
   "add_to_cart": "Ajouter au panier",
   "added_to_cart": "Ajouté au panier",
   "quantity": "Quantité",
@@ -91,7 +88,6 @@
   "out_of_stock": "Rupture de stock",
   "only_left": "Plus que {n}",
   "related_products": "Produits liés",
-
   "cart_empty": "Votre panier est vide.",
   "continue_shopping": "Continuer les achats",
   "price": "Prix",
@@ -100,7 +96,6 @@
   "shipping": "Livraison",
   "total": "Total",
   "proceed_to_checkout": "Passer à la caisse",
-
   "checkout": "Paiement",
   "customer_info": "Informations client",
   "full_name": "Nom complet",
@@ -126,7 +121,6 @@
   "drafts": "Brouillons",
   "pending_orders": "Commandes en attente",
   "latest_orders": "Dernières commandes",
-  "latest_products": "Derniers produits",
   "dashboard": "Tableau de bord",
   "import_by_url": "Importer via URL",
   "settings": "Paramètres",
@@ -145,14 +139,12 @@
   "contact_us": "Contactez-nous",
   "quick_links": "Liens rapides",
   "footer_default": "Votre boutique préférée pour découvrir les meilleurs produits à des prix compétitifs.",
-
   "order_received": "Commande reçue !",
   "back_to_shop": "Retour à la boutique",
   "confirm_via_whatsapp": "Confirmer via WhatsApp",
   "contact_via_whatsapp": "Contacter le client via WhatsApp",
   "whatsapp_order_msg": "Bonjour, je confirme ma commande n°{num} d'un montant de {total}",
   "whatsapp_customer_msg": "Bonjour, au sujet de votre commande n°{num}…",
-
   "notifications_title": "Notifications de commande",
   "notifications_intro": "Recevez une notification instantanée sur Telegram et/ou WhatsApp à chaque nouvelle commande. Configuration facultative.",
   "notifications_setup_guide": "Guide de configuration pas à pas",
@@ -168,7 +160,6 @@
   "callmebot_phone_help": "Votre numéro avec indicatif (ex. +212600000000)",
   "callmebot_key_help": "La clé reçue de CallMeBot après activation",
   "test_whatsapp": "Envoyer un test",
-
   "order_status_pending": "En attente",
   "order_status_confirmed": "Confirmée",
   "order_status_shipped": "Expédiée",
@@ -177,13 +168,11 @@
   "product_status_published": "Publié",
   "product_status_draft": "Brouillon",
   "all_statuses": "Tous les statuts",
-
   "paste_product_url": "Coller l'URL du produit",
   "import_hint": "Compatible avec la plupart des boutiques (Amazon, Jumia, Noon, AliExpress…). Extraction automatique du nom, image, description et prix d'origine.",
   "fetch": "Récupérer",
   "preview": "Aperçu",
   "add_to_store": "Ajouter à la boutique",
-
   "image_downloaded": "Image téléchargée sur le serveur",
   "image_hotlink_only": "Téléchargement impossible — l'image sera servie depuis la source",
   "image_not_found": "Aucune image trouvée sur la page",
@@ -194,7 +183,10 @@
   "image_candidates_hint": "Cliquez sur une image pour la sélectionner. Le serveur tentera de la télécharger avant l'enregistrement.",
   "image_upload_fallback": "Ou téléversez une image depuis votre appareil",
   "image_upload_fallback_hint": "En dernier recours, téléversez l'image depuis votre ordinateur.",
-
   "not_found": "Page introuvable",
-  "server_error": "Erreur serveur"
+  "server_error": "Erreur serveur",
+  "legal_links": "Mentions légales",
+  "privacy_policy": "Politique de Confidentialité",
+  "terms_of_service": "Conditions d'Utilisation",
+  "return_policy": "Politique de Retour"
 }

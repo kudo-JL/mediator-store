@@ -1,0 +1,124 @@
+<%- include('../partials/header') %>
+
+<style>
+  .legal-page { max-width: 880px; margin: 0 auto; padding: 32px 16px 80px; }
+  .legal-page h1 { font-size: 2rem; margin: 0 0 8px; }
+  .legal-page .meta { opacity: .7; margin-bottom: 32px; font-size: .9rem; }
+  .legal-page h2 { font-size: 1.4rem; margin: 32px 0 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(0,0,0,.1); }
+  .legal-page h3 { font-size: 1.1rem; margin: 20px 0 8px; }
+  .legal-page p { line-height: 1.7; margin: 0 0 12px; }
+  .legal-page ul, .legal-page ol { line-height: 1.7; padding-<%= dir === 'rtl' ? 'right' : 'left' %>: 24px; margin: 0 0 16px; }
+  .legal-page li { margin-bottom: 6px; }
+  .legal-page .info-box { background: rgba(37,99,235,.05); border-<%= dir === 'rtl' ? 'right' : 'left' %>: 3px solid #2563eb; padding: 16px; margin: 16px 0; border-radius: 4px; }
+  .legal-page .last-updated { display: inline-block; padding: 4px 10px; background: rgba(0,0,0,.05); border-radius: 4px; font-size: .85rem; }
+  .lang-switch { display: flex; gap: 8px; margin-bottom: 16px; font-size: .9rem; }
+  .lang-switch a { padding: 4px 12px; border: 1px solid rgba(0,0,0,.1); border-radius: 4px; text-decoration: none; opacity: .7; }
+  .lang-switch a.active { background: #2563eb; color: #fff; opacity: 1; border-color: #2563eb; }
+</style>
+
+<main class="legal-page" dir="<%= dir %>" lang="<%= lang %>">
+  <div class="lang-switch">
+    <a href="/terms?lang=ar" class="<%= lang === 'ar' ? 'active' : '' %>">العربية</a>
+    <a href="/terms?lang=fr" class="<%= lang === 'fr' ? 'active' : '' %>">Français</a>
+    <a href="/terms?lang=en" class="<%= lang === 'en' ? 'active' : '' %>">English</a>
+  </div>
+
+  <h1>شروط الاستخدام</h1>
+  <p class="meta"><span class="last-updated">آخر تحديث: 31 أغسطس 2026</span></p>
+
+  <h2>1. قبول الشروط</h2>
+  <p>باستخدامك لموقع <strong>متجر الوسيط</strong> (store.lotfi.ma)، فإنك توافق على هذه الشروط والأحكام. إذا كنت لا توافق، يُرجى عدم استخدام الموقع.</p>
+
+  <div class="info-box">
+    <p><strong>المعلومات القانونية للمقاول:</strong></p>
+    <ul>
+      <li>📋 <strong>الصفة:</strong> مقاول ذاتي (Auto-entrepreneur)</li>
+      <li>🆔 <strong>رقم المقاولة الفريد:</strong> 00403017600042</li>
+      <li>💼 <strong>الرقم الضريبي (IF):</strong> 73333808</li>
+      <li>🆔 <strong>رقم البطاقة الوطنية:</strong> 12404638</li>
+      <li>📅 <strong>تاريخ التسجيل:</strong> 28 أغسطس 2026</li>
+    </ul>
+  </div>
+
+  <h2>2. وصف الخدمة</h2>
+  <p>متجر الوسيط هو متجر إلكتروني يبيع منتجات متنوعة للعملاء في المغرب. الخدمة متاحة للبالغين (18 سنة فأكثر) القادرين على إبرام عقود قانونية.</p>
+
+  <h2>3. الحساب والطلبات</h2>
+  <h3>3.1 إنشاء الطلبات</h3>
+  <ul>
+    <li>يمكنك تصفح المنتجات وإضافتها إلى السلة دون إنشاء حساب.</li>
+    <li>عند تأكيد الطلب، تطلب منك <strong>الاسم الكامل، رقم الهاتف، وعنوان التوصيل</strong>.</li>
+    <li>تقديم معلومات خاطئة يعرّض الطلب للإلغاء.</li>
+  </ul>
+
+  <h3>3.2 تأكيد الطلب</h3>
+  <p>بعد تأكيدك للطلب، يصلك اتصال أو رسالة على Telegram/WhatsApp لتأكيد التفاصيل. الطلب يصبح <strong>ملزماً</strong> فقط بعد التأكيد من طرفنا.</p>
+
+  <h2>4. الأسعار والدفع</h2>
+  <ul>
+    <li>الأسعار بالدرهم المغربي (د.م.) وتشمل <strong>الضرائب</strong> إن وُجدت.</li>
+    <li><strong>الدفع نقداً عند الاستلام</strong> فقط — لا نقبل الدفع الإلكتروني.</li>
+    <li>قد تتغير الأسعار بدون إشعار مسبق، لكن السعر النهائي يكون ما رأيتَه عند تأكيد الطلب.</li>
+  </ul>
+
+  <h2>5. التوصيل</h2>
+  <ul>
+    <li>نوصل الطلبات داخل <strong>المغرب</strong> فقط.</li>
+    <li>مدة التوصيل: <strong>2-7 أيام عمل</strong> حسب المنطقة.</li>
+    <li>رسوم التوصيل تُحسب عند تأكيد الطلب وتظهر في الفاتورة.</li>
+    <li>تأخير التوصيل بسبب ظروف خارجة عن إرادتنا (طقس، إضرابات، أعياد) لا يوجب تعويضاً.</li>
+  </ul>
+
+  <h2>6. الإرجاع والاسترداد</h2>
+  <p>لتفاصيل الإرجاع، راجع <a href="/return">سياسة الإرجاع</a>.</p>
+
+  <h2>7. التزامات المستخدم</h2>
+  <p>عند استخدام الموقع، توافق على:</p>
+  <ul>
+    <li>✅ تقديم معلومات صحيحة ودقيقة.</li>
+    <li>✅ عدم استخدام الموقع لأغراض غير قانونية.</li>
+    <li>✅ عدم محاولة اختراق الموقع أو تعطيله.</li>
+    <li>✅ عدم نسخ محتوى الموقع بدون إذن.</li>
+  </ul>
+  <p>مخالفة هذه الشروط تعرّض حسابك (إن وجد) للإغلاق وطلباتك للإلغاء.</p>
+
+  <h2>8. الملكية الفكرية</h2>
+  <p>جميع المحتويات (نصوص، صور، شعارات، تصميم) ملك لـ <strong>متجر الوسيط</strong> ومحمية بموجب قوانين الملكية الفكرية. يحظر نسخها أو استخدامها بدون إذن كتابي مسبق.</p>
+
+  <h2>9. حدود المسؤولية</h2>
+  <div class="info-box">
+    <p><strong>متجر الوسيط غير مسؤول عن:</strong></p>
+    <ul>
+      <li>الأضرار غير المباشرة الناتجة عن استخدام الموقع.</li>
+      <li>محتوى مواقع خارجية نرتبط بها.</li>
+      <li>تأخير التوصيل بسبب ظروف قاهرة.</li>
+      <li>أعطال تقنية مؤقتة في الموقع.</li>
+    </ul>
+  </div>
+  <p>مسؤوليتنا القصوى تقتصر على <strong>قيمة الطلب</strong> نفسه.</p>
+
+  <h2>10. القانون المعمول به</h2>
+  <p>تخضع هذه الشروط للقانون <strong>المغربي</strong>، وأي نزاع يُحل أمام محاكم <strong>المغرب</strong>. مع مراعاة:</p>
+  <ul>
+    <li>حماية المستهلك المغربي (قانون 31-08).</li>
+    <li>قانون التجارة الإلكترونية المغربي.</li>
+    <li>GDPR (لأن الاستضافة في فرنسا).</li>
+  </ul>
+
+  <h2>11. تعديل الشروط</h2>
+  <p>نحق في تعديل هذه الشروط في أي وقت. التعديلات تُنشر على هذه الصفحة مع تحديث التاريخ. استمرارك في استخدام الموقع بعد التعديل يعني موافقتك عليها.</p>
+
+  <h2>12. إنهاء الخدمة</h2>
+  <p>نحق في إيقاف أو تعليق الموقع مؤقتاً للصيانة أو لأي سبب تقني، دون إشعار مسبق.</p>
+
+  <h2>13. التواصل</h2>
+  <p>لأي سؤال حول هذه الشروط:</p>
+  <ul>
+    <li>📧 <strong>support@lotfi.ma</strong></li>
+    <li>📞 <strong>+212 693 016 974</strong> (Telegram / واتساب)</li>
+  </ul>
+
+  <p style="margin-top: 40px; text-align: center; opacity: .7;">شكراً لاستخدامك متجر الوسيط 🛒</p>
+</main>
+
+<%- include('../partials/footer') %>

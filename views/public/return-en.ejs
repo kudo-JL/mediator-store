@@ -1,0 +1,149 @@
+<%- include('../partials/header') %>
+
+<style>
+  .legal-page { max-width: 880px; margin: 0 auto; padding: 32px 16px 80px; }
+  .legal-page h1 { font-size: 2rem; margin: 0 0 8px; }
+  .legal-page .meta { opacity: .7; margin-bottom: 32px; font-size: .9rem; }
+  .legal-page h2 { font-size: 1.4rem; margin: 32px 0 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(0,0,0,.1); }
+  .legal-page h3 { font-size: 1.1rem; margin: 20px 0 8px; }
+  .legal-page p { line-height: 1.7; margin: 0 0 12px; }
+  .legal-page ul, .legal-page ol { line-height: 1.7; padding-left: 24px; margin: 0 0 16px; }
+  .legal-page li { margin-bottom: 6px; }
+  .legal-page .info-box { background: rgba(37,99,235,.05); border-left: 3px solid #2563eb; padding: 16px; margin: 16px 0; border-radius: 4px; }
+  .legal-page .warning-box { background: rgba(234,88,12,.05); border-left: 3px solid #ea580c; padding: 16px; margin: 16px 0; border-radius: 4px; }
+  .legal-page table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: .95rem; }
+  .legal-page th, .legal-page td { padding: 10px 12px; border: 1px solid rgba(0,0,0,.1); text-align: left; }
+  .legal-page th { background: rgba(0,0,0,.04); font-weight: 600; }
+  .legal-page .last-updated { display: inline-block; padding: 4px 10px; background: rgba(0,0,0,.05); border-radius: 4px; font-size: .85rem; }
+  .lang-switch { display: flex; gap: 8px; margin-bottom: 16px; font-size: .9rem; }
+  .lang-switch a { padding: 4px 12px; border: 1px solid rgba(0,0,0,.1); border-radius: 4px; text-decoration: none; opacity: .7; }
+  .lang-switch a.active { background: #2563eb; color: #fff; opacity: 1; border-color: #2563eb; }
+</style>
+
+<main class="legal-page" dir="<%= dir %>" lang="<%= lang %>">
+  <div class="lang-switch">
+    <a href="/return?lang=ar" class="<%= lang === 'ar' ? 'active' : '' %>">العربية</a>
+    <a href="/return?lang=fr" class="<%= lang === 'fr' ? 'active' : '' %>">Français</a>
+    <a href="/return?lang=en" class="<%= lang === 'en' ? 'active' : '' %>">English</a>
+  </div>
+
+  <h1>Return and Refund Policy</h1>
+  <p class="meta"><span class="last-updated">Last updated: August 31, 2026</span></p>
+
+  <div class="info-box">
+    <p><strong>Business Legal Information:</strong></p>
+    <ul>
+      <li>📋 <strong>Legal Status:</strong> Auto-entrepreneur (Self-employed)</li>
+      <li>🆔 <strong>Business ID:</strong> 00403017600042</li>
+      <li>💼 <strong>Tax ID (IF):</strong> 73333808</li>
+    </ul>
+  </div>
+
+  <h2>1. Your Right of Return</h2>
+  <p>At <strong>Mediator Store</strong>, we aim for your complete satisfaction. You can return the product in the following cases:</p>
+  <ul>
+    <li>✅ Product is <strong>defective or damaged</strong> upon receipt.</li>
+    <li>✅ Product is <strong>different from the description</strong> on the site.</li>
+    <li>✅ You received the <strong>wrong product</strong>.</li>
+    <li>✅ You change your mind within <strong>24 hours</strong> (under conditions).</li>
+  </ul>
+
+  <h2>2. Return Conditions</h2>
+  <p>For us to accept a return, the product must be:</p>
+  <ul>
+    <li>📦 In its <strong>original condition</strong> (unused, unopened, with all accessories).</li>
+    <li>📅 Within <strong>7 days</strong> of receipt.</li>
+    <li>📄 With the <strong>purchase invoice</strong>.</li>
+    <li>📸 With <strong>clear photos</strong> of the defective product (if returning due to defect).</li>
+  </ul>
+
+  <h2>3. Non-Returnable Products</h2>
+  <div class="warning-box">
+    <p><strong>The following products cannot be returned:</strong></p>
+    <ul>
+      <li>❌ <strong>Used or opened</strong> products (except for defects).</li>
+      <li>❌ <strong>Hygienic or personal</strong> products (underwear, cosmetics).</li>
+      <li>❌ <strong>Perishable</strong> products (food, medicine).</li>
+      <li>❌ <strong>Custom-made</strong> products.</li>
+      <li>❌ <strong>Clearly used</strong> products.</li>
+    </ul>
+  </div>
+
+  <h2>4. Return Process</h2>
+  <h3>Step 1: Contact Us</h3>
+  <p>Through one of the following methods:</p>
+  <ul>
+    <li>📧 Email: <strong>support@lotfi.ma</strong></li>
+    <li>📞 Phone/Telegram: <strong>+212 693 016 974</strong></li>
+  </ul>
+  <p>Send us:</p>
+  <ul>
+    <li>Order number</li>
+    <li>Reason for return</li>
+    <li>Photos of the product (if defective)</li>
+  </ul>
+
+  <h3>Step 2: Approval</h3>
+  <p>We will respond within <strong>48 business hours</strong>. If approved, we will give you return instructions.</p>
+
+  <h3>Step 3: Ship the Product</h3>
+  <p>Return the product to us within <strong>5 days</strong> of approval. Return shipping fees:</p>
+  <table>
+    <tr><th>Reason</th><th>Who pays?</th></tr>
+    <tr><td>Product defect</td><td><strong>Mediator Store</strong> (we send a courier)</td></tr>
+    <tr><td>Wrong product</td><td><strong>Mediator Store</strong></td></tr>
+    <tr><td>Change of mind</td><td><strong>The customer</strong></td></tr>
+  </table>
+
+  <h3>Step 4: Refund</h3>
+  <p>After we receive and inspect the product:</p>
+  <ul>
+    <li>If the return is <strong>our fault</strong>: full refund + shipping fees within <strong>7 business days</strong>.</li>
+    <li>If <strong>change of mind</strong>: refund (excluding shipping fees) within <strong>7 business days</strong>.</li>
+  </ul>
+  <p><strong>Refund method</strong>: cash on receipt of the product, or bank transfer (by agreement).</p>
+
+  <h2>5. Cancellation Before Shipping</h2>
+  <p>You can cancel your order <strong>before it ships</strong> at no charge. Contact us immediately:</p>
+  <ul>
+    <li>📧 <strong>support@lotfi.ma</strong></li>
+    <li>📞 <strong>+212 693 016 974</strong></li>
+  </ul>
+
+  <h2>6. Damaged or Incomplete Products on Receipt</h2>
+  <p>If you receive a damaged or incomplete product:</p>
+  <ol>
+    <li><strong>Do not accept</strong> the product from the courier (refuse delivery).</li>
+    <li>Or accept and <strong>send us photos immediately</strong> of the damaged product.</li>
+    <li>We will send you a <strong>replacement product</strong> free of charge within 48 hours, or a full refund.</li>
+  </ol>
+
+  <h2>7. Exchange</h2>
+  <p>In some cases, you can exchange the product:</p>
+  <ul>
+    <li>✅ If the product is <strong>defective</strong>: free exchange.</li>
+    <li>✅ If you want a <strong>different size/color</strong>: possible, but shipping fees are your responsibility.</li>
+  </ul>
+
+  <h2>8. Special Cases</h2>
+  <h3>Sales and Discounts</h3>
+  <p>Products purchased on <strong>sale</strong> can be returned under the same conditions, but the refund may be limited to the <strong>original purchase price</strong>.</p>
+
+  <h3>Gifts</h3>
+  <p>If the product is a gift, the recipient can return it under the same conditions.</p>
+
+  <h2>9. Contact</h2>
+  <p>For any question about returns or refunds:</p>
+  <ul>
+    <li>📧 <strong>support@lotfi.ma</strong></li>
+    <li>📞 <strong>+212 693 016 974</strong> (Telegram / WhatsApp)</li>
+  </ul>
+  <p>We respond within <strong>24 business hours</strong>.</p>
+
+  <h2>10. Governing Law</h2>
+  <p>This policy is governed by the <strong>Moroccan Consumer Protection Law 31-08</strong>, with GDPR compliance for European customers.</p>
+
+  <p style="margin-top: 40px; text-align: center; opacity: .7;">Thank you for your trust in Mediator Store 🛒</p>
+</main>
+
+<%- include('../partials/footer') %>
