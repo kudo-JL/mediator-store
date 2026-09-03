@@ -1,9 +1,151 @@
 <%- include('../partials/header') %>
 
+<style>
+  /* Agreement Modal */
+  .agreement-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.2s ease;
+  }
+  .agreement-modal.show { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .agreement-box {
+    background: var(--card, #fff);
+    border-radius: 12px;
+    max-width: 640px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+  }
+  .agreement-header {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: white;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .agreement-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+  .agreement-header .icon {
+    font-size: 1.5rem;
+  }
+  .agreement-body {
+    padding: 20px 24px;
+    overflow-y: auto;
+    line-height: 1.7;
+    flex: 1;
+  }
+  .agreement-body p { margin-bottom: 12px; }
+  .agreement-body .intro {
+    font-size: 1.05rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  .agreement-body .alert {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 6px;
+  }
+  .agreement-body .regions {
+    background: #f3f4f6;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+  }
+  .agreement-body .regions h4 {
+    margin: 0 0 12px;
+    font-size: 1rem;
+    color: #1e40af;
+  }
+  .agreement-body .region-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .agreement-body .region-item:last-child { border-bottom: none; }
+  .agreement-body .region-item .day {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .agreement-body .contact {
+    background: #ecfdf5;
+    border-radius: 8px;
+    padding: 14px;
+    margin: 16px 0;
+    font-size: 0.95rem;
+  }
+  .agreement-body .contact a {
+    color: #059669;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .agreement-body .footer-msg {
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+    margin-top: 16px;
+  }
+  .agreement-actions {
+    padding: 16px 24px;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+  }
+  .agreement-actions button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .agreement-actions .btn-cancel {
+    background: #e5e7eb;
+    color: #374151;
+  }
+  .agreement-actions .btn-cancel:hover { background: #d1d5db; }
+  .agreement-actions .btn-agree {
+    background: #059669;
+    color: white;
+  }
+  .agreement-actions .btn-agree:hover { background: #047857; }
+
+  @media (max-width: 640px) {
+    .agreement-actions { flex-direction: column-reverse; }
+    .agreement-actions button { width: 100%; }
+  }
+</style>
+
 <section class="container section">
   <h1 class="page-title"><%= t('checkout') %></h1>
   <div class="checkout-grid">
-    <form class="checkout-form" method="post" action="/checkout">
+    <form id="checkout-form" class="checkout-form" method="post" action="/checkout">
       <h3><%= t('customer_info') %></h3>
       <div class="form-row">
         <label><%= t('full_name') %> *</label>
@@ -35,7 +177,7 @@
           <input type="radio" name="payment_method" value="cod" checked> <%= t('payment_cod') %>
         </label>
       </div>
-      <button type="submit" class="btn btn-primary btn-lg"><%= t('place_order') %></button>
+      <button type="button" id="confirm-order-btn" class="btn btn-primary btn-lg"><%= t('place_order') %></button>
     </form>
 
     <aside class="order-summary">
@@ -54,5 +196,138 @@
     </aside>
   </div>
 </section>
+
+<!-- ============== AGREEMENT MODAL ============== -->
+<div id="agreement-modal" class="agreement-modal" role="dialog" aria-modal="true" aria-labelledby="agreement-title">
+  <div class="agreement-box">
+    <div class="agreement-header">
+      <span class="icon">📋</span>
+      <h2 id="agreement-title">تنبيه قبل التأكيد النهائي</h2>
+    </div>
+
+    <div class="agreement-body">
+      <p class="intro">
+        نشكركم لشراء المنتوج من موقعنا، سنتصل بكم في أقرب وقت ممكن لتأكيد الطلب.
+      </p>
+
+      <p>
+        قبل التأكيد النهائي، يرجى قراءة الإعلان التالي بعناية:
+      </p>
+
+      <div class="alert">
+        <strong>⚠️ مهم:</strong>
+        إذا كنت من الأقاليم التالية، فلن يتم تسليم المنتوج إلا في اليوم المحدد أسفله.
+        أما إذا كنت خارج هذه الأقاليم، فسيتم إرسال المنتوج عبر شركات الشحن الدولي،
+        لذلك <strong>لسنا ملزمين</strong> بتوصيل المنتوج في يوم محدد.
+      </div>
+
+      <div class="regions">
+        <h4>📍 الأقاليم المعنية ومواعيد التسليم</h4>
+
+        <div class="region-item">
+          <span>إقليم فجيج وجرادة</span>
+          <span class="day">الإثنين</span>
+        </div>
+        <div class="region-item">
+          <span>إقليم وجدة وبركان</span>
+          <span class="day">الثلاثاء</span>
+        </div>
+        <div class="region-item">
+          <span>إقليم الناظور والدريوش</span>
+          <span class="day">الأربعاء</span>
+        </div>
+        <div class="region-item">
+          <span>إقليم جرسيف وتازة</span>
+          <span class="day">الخميس</span>
+        </div>
+        <div class="region-item">
+          <span>إقليم تاوريرت</span>
+          <span class="day">الجمعة</span>
+        </div>
+        <div class="region-item">
+          <span>إقليمات أخرى (شحن دولي)</span>
+          <span class="day">السبت - الأحد</span>
+        </div>
+
+        <p style="margin-top: 12px; font-size: 0.9rem; color: #6b7280;">
+          💡 بالنسبة للسبت والأحد: راحة من جهتنا، أما شركات الشحن الدولي فتعمل حسب أيام العمل لديها.
+        </p>
+      </div>
+
+      <p>
+        <strong>بالضغط على "موافق" أدناه، فأنت توافق على هذا الإعلان</strong> وسيتم التواصل معكم لتأكيد الطلب.
+      </p>
+
+      <div class="contact">
+        <strong>📞 في حال كان هناك أي استفسار، المرجو مراسلتنا:</strong><br>
+        📧 البريد الإلكتروني: <a href="mailto:support@lotfi.ma">support@lotfi.ma</a><br>
+        💬 واتساب: <a href="https://wa.me/212693016974" target="_blank" rel="noopener">+212 693 016 974</a>
+      </div>
+
+      <p class="footer-msg">
+        ✨ شكراً لاختياركم متجرنا، نتمنى أن نكون عند حسن ظنكم ✨
+      </p>
+    </div>
+
+    <div class="agreement-actions">
+      <button type="button" id="cancel-agreement-btn" class="btn-cancel">إلغاء</button>
+      <button type="button" id="agree-btn" class="btn-agree">✓ موافق</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const modal = document.getElementById('agreement-modal');
+  const confirmBtn = document.getElementById('confirm-order-btn');
+  const cancelBtn = document.getElementById('cancel-agreement-btn');
+  const agreeBtn = document.getElementById('agree-btn');
+  const form = document.getElementById('checkout-form');
+
+  // Show modal when user clicks "تأكيد الطلب"
+  if (confirmBtn) {
+    confirmBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    });
+  }
+
+  // Cancel: close modal, user can edit info
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', function() {
+      modal.classList.remove('show');
+      document.body.style.overflow = '';
+    });
+  }
+
+  // Agree: actually submit the form
+  if (agreeBtn) {
+    agreeBtn.addEventListener('click', function() {
+      modal.classList.remove('show');
+      document.body.style.overflow = '';
+      form.submit();
+    });
+  }
+
+  // Close modal on ESC key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal.classList.contains('show')) {
+      modal.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Close modal when clicking outside the box
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+    });
+  }
+})();
+</script>
 
 <%- include('../partials/footer') %>
