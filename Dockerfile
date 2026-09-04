@@ -41,7 +41,7 @@ COPY --chown=app:app data ./data
 # Make sure runtime dirs are writable by app
 RUN chown -R app:app /app/data /app/uploads
 
-USER app
+USER root
 
 EXPOSE 3000
 
