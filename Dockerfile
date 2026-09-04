@@ -49,4 +49,7 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/',r=>process.exit(r.statusCode<400?0:1)).on('error',()=>process.exit(1))"
 
-CMD ["node", "server.js"]
+# IMPORTANT: Fix volume permissions BEFORE starting Node.
+# Persistent Storage mounts as root by default, but our app runs as `app` user.
+# This chown fixes the permission issue without breaking non-root security.
+CMD ["sh", "-c", "chown -R app:app /app/data /app/uploads 2>/dev/null || true; exec node server.js"]
