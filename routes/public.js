@@ -270,22 +270,6 @@ router.get('/order/:order_number', (req, res) => {
   res.render('public/order-success', { title: 'تم استلام طلبك', order, items });
 });
 
-// ---- Download invoice (public) ----
-router.get('/invoice/:order_number.pdf', async (req, res, next) => {
-  try {
-    const order = db
-      .prepare('SELECT id FROM orders WHERE order_number = ?')
-      .get(req.params.order_number);
-    if (!order) return res.status(404).send('Order not found');
-    const { invoiceNumber, pdfPath } = await generateInvoiceForOrder(db, order.id);
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="${invoiceNumber}.pdf"`);
-    res.sendFile(pdfPath);
-  } catch (e) {
-    console.error('[invoice]', e);
-    next(e);
-  }
-});
 
 // ---- Image proxy ----
 const ALLOWED_HOST_HINTS = /\.(jpg|jpeg|png|gif|webp|avif|svg)(\?|$|#)/i;
