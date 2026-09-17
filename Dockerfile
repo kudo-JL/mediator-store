@@ -8,7 +8,7 @@ WORKDIR /app
 
 # Install OS deps needed for some npm packages (e.g. cheerio optional deps)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      python3 make g++ ca-certificates curl \
+      python3 make g++ ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 COPY package.json package-lock.json* ./
@@ -17,6 +17,11 @@ RUN npm ci --omit=dev --no-audit --no-fund || npm install --omit=dev --no-audit 
 # ---- Runtime ----
 FROM node:22-bookworm-slim AS runtime
 WORKDIR /app
+
+# Install curl (needed to download Amiri font) + ca-certificates (for HTTPS).
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 # Run as non-root
 RUN groupadd --system app && useradd --system --gid app --home /app --shell /sbin/nologin app \
@@ -28,7 +33,6 @@ ENV NODE_ENV=production \
     NODE_OPTIONS="--enable-source-maps"
 
 # Download Arabic font (Amiri) during build — no manual upload needed.
-# Amiri is a free Arabic font that supports all contextual letter forms.
 RUN curl -fsSL -o /app/lib/fonts/Amiri-Regular.ttf \
       https://github.com/aliftype/amiri/raw/main/fonts/ttf/Amiri-Regular.ttf \
  && chown app:app /app/lib/fonts/Amiri-Regular.ttf
@@ -56,6 +60,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/',r=>process.exit(r.statusCode<400?0:1)).on('error',()=>process.exit(1))"
 
 # IMPORTANT: Fix volume permissions BEFORE starting Node.
-# Persistent Storage mounts as root by default, but our app runs as `app` user.
-# This chown fixes the permission issue without breaking non-root security.
 CMD ["sh", "-c", "chown -R app:app /app/data /app/uploads 2>/dev/null || true; exec node server.js"]
