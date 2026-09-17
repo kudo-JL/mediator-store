@@ -4,6 +4,9 @@
   <h1 class="page-title"><%= t('order') %> #<%= order.order_number %></h1>
   <div class="page-actions">
     <a class="btn btn-ghost" href="/admin/orders">← <%= t('back') %></a>
+    <a class="btn btn-primary" href="/admin/orders/<%= order.id %>/invoice.pdf" target="_blank" rel="noopener">
+      📄 <%= t('download_invoice') || 'تحميل الفاتورة' %>
+    </a>
   </div>
 </div>
 
@@ -31,12 +34,15 @@
       </tfoot>
     </table>
   </section>
-
+<!---->
   <aside>
     <div class="card">
       <h3 class="card-title"><%= t('status') %></h3>
       <p>
         <span class="status-pill status-<%= order.status %>"><%= t('order_status_' + order.status) %></span>
+        <% if (order.delivered_at) { %>
+          <br><small class="muted"><%= t('delivered_at') || 'تم التسليم في' %>: <%= order.delivered_at %></small>
+        <% } %>
       </p>
       <form method="post" action="/admin/orders/<%= order.id %>/status" class="status-form">
         <select name="status">
@@ -46,7 +52,15 @@
         </select>
         <button class="btn btn-primary" type="submit"><%= t('update') %></button>
       </form>
-    </div>
+      <% if (order.status !== 'delivered') { %>
+        <p class="muted" style="margin-top:.5rem;font-size:.85em;">
+          ⚠️ <%= t('invoice_send_hint') || 'عند اختيار "تم التسليم" سيتم إرسال الفاتورة تلقائياً عبر Email + Telegram' %>
+        </p>
+      <% } %>
+    
+</div>
+
+
 
     <div class="card">
       <h3 class="card-title"><%= t('customer_info') %></h3>
