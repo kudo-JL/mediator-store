@@ -10,6 +10,8 @@ const { db, getAllSettings, setSetting } = require('../lib/db');
 const { verifyPassword, hashPassword } = require('../lib/auth');
 const { importFromUrl, downloadImageByUrl } = require('../lib/scraper');
 const { requireAdmin } = require('../middleware/auth');
+const { generateInvoiceForOrder } = require('../lib/invoice');
+const { notifyInvoiceReady } = require('../lib/notifications');
 
 // ---- File upload (multer 2.x) ----
 const UPLOAD_DIR = path.join(__dirname, '..', 'uploads', 'products');
@@ -95,9 +97,7 @@ router.get('/products', requireAdmin, (req, res) => {
 router.get('/products/new', requireAdmin, (req, res) => {
   const cats = db.prepare('SELECT * FROM categories ORDER BY name_ar').all();
   res.render('admin/product-form', {
-    title: 'منتج جديد',
-    product: null,
-    categories: cats,
+    title: 'منتج جديد', product: null, categories: cats,
   });
 });
 
@@ -108,135 +108,119 @@ router.get('/products/:id/edit', requireAdmin, (req, res) => {
   res.render('admin/product-form', { title: 'تعديل منتج', product, categories: cats });
 });
 
-// ---- Save product (create or update) ----
-router.post(
-  '/products/save',
-  requireAdmin,
-  upload.array('gallery', 8),
-  async (req, res) => {
-    const id = parseInt(req.body.id, 10) || null;
-    const name_ar = (req.body.name_ar || '').trim();
-    if (!name_ar) {
-      req.session.flash = { type: 'error', message: 'اسم المنتج بالعربية مطلوب.' };
-      return res.redirect(id ? `/admin/products/${id}/edit` : '/admin/products/new');
-    }
-    const fields = {
-      name_ar,
-      name_fr: (req.body.name_fr || '').trim(),
-      name_en: (req.body.name_en || '').trim(),
-      description_ar: (req.body.description_ar || '').trim(),
-      description_fr: (req.body.description_fr || '').trim(),
-      description_en: (req.body.description_en || '').trim(),
-      category_id: parseInt(req.body.category_id, 10) || null,
-      original_price: parseFloat(req.body.original_price) || 0,
-      selling_price: parseFloat(req.body.selling_price) || 0,
-      cost_price: parseFloat(req.body.cost_price) || 0,
-      sku: (req.body.sku || '').trim(),
-      stock: parseInt(req.body.stock, 10) || 0,
-      status: req.body.status === 'published' ? 'published' : 'draft',
-      featured: req.body.featured === 'on' ? 1 : 0,
-      source_url: (req.body.source_url || '').trim(),
-      source_store: (req.body.source_store || '').trim(),
-      updated_at: new Date().toISOString(),
-    };
-    const files = (req.files || []);
-    const gallery = files.length
-      ? JSON.stringify(files.map((f) => `/uploads/products/${f.filename}`))
-      : null;
-
-    // When a product is created via the URL importer, the scraped image
-    // is already on disk. The form sends its public path as image_path_override
-    // so the save route can re-use it without re-uploading.
-    const imagePathOverride = (req.body.image_path_override || '').trim() || null;
-    const sourceImageUrl = (req.body.source_image_url || '').trim() || null;
-    const customImageUrl = (req.body.custom_image_url || '').trim() || null;
-
-    // If the user pasted a custom image URL on the import form, try to
-    // download it now (server-side, so hotlink/CORS aren't an issue).
-    let customDownloadedPath = null;
-    if (!id && customImageUrl && /^https?:\/\//i.test(customImageUrl)) {
-      const referer = (req.body.source_url || '').trim() || customImageUrl;
-      customDownloadedPath = await downloadImageByUrl(customImageUrl, referer);
-    }
-    try {
-      if (id) {
-        const existing = db.prepare('SELECT * FROM products WHERE id = ?').get(id);
-        if (!existing) {
-          req.session.flash = { type: 'error', message: 'المنتج غير موجود.' };
-          return res.redirect('/admin/products');
-        }
-        // main image
-        let imagePath = existing.image_path;
-        if (files.length) imagePath = `/uploads/products/${files[0].filename}`;
-        // append gallery (combine old + new)
-        let galleryPaths = existing.gallery_paths;
-        if (gallery) {
-          const old = existing.gallery_paths ? JSON.parse(existing.gallery_paths) : [];
-          const fresh = JSON.parse(gallery);
-          galleryPaths = JSON.stringify([...old, ...fresh]);
-        }
-        db.prepare(
-          `UPDATE products SET
-            name_ar=@name_ar, name_fr=@name_fr, name_en=@name_en,
-            description_ar=@description_ar, description_fr=@description_fr, description_en=@description_en,
-            category_id=@category_id, original_price=@original_price, selling_price=@selling_price,
-            cost_price=@cost_price, sku=@sku, stock=@stock, status=@status, featured=@featured,
-            source_url=@source_url, source_store=@source_store, updated_at=@updated_at,
-            image_path=@image_path, source_image_url=@source_image_url, gallery_paths=@gallery_paths
-            WHERE id=@id`
-        ).run({
-          ...fields,
+// ---- Save product ----
+router.post('/products/save', requireAdmin, upload.array('gallery', 8), async (req, res) => {
+  const id = parseInt(req.body.id, 10) || null;
+  const name_ar = (req.body.name_ar || '').trim();
+  if (!name_ar) {
+    req.session.flash = { type: 'error', message: 'اسم المنتج بالعربية مطلوب.' };
+    return res.redirect(id ? `/admin/products/${id}/edit` : '/admin/products/new');
+  }
+  const fields = {
+    name_ar,
+    name_fr: (req.body.name_fr || '').trim(),
+    name_en: (req.body.name_en || '').trim(),
+    description_ar: (req.body.description_ar || '').trim(),
+    description_fr: (req.body.description_fr || '').trim(),
+    description_en: (req.body.description_en || '').trim(),
+    category_id: parseInt(req.body.category_id, 10) || null,
+    original_price: parseFloat(req.body.original_price) || 0,
+    selling_price: parseFloat(req.body.selling_price) || 0,
+    cost_price: parseFloat(req.body.cost_price) || 0,
+    sku: (req.body.sku || '').trim(),
+    stock: parseInt(req.body.stock, 10) || 0,
+    status: req.body.status === 'published' ? 'published' : 'draft',
+    featured: req.body.featured === 'on' ? 1 : 0,
+    source_url: (req.body.source_url || '').trim(),
+    source_store: (req.body.source_store || '').trim(),
+    updated_at: new Date().toISOString(),
+  };
+  const files = (req.files || []);
+  const gallery = files.length
+    ? JSON.stringify(files.map((f) => `/uploads/products/${f.filename}`))
+    : null;
+  const imagePathOverride = (req.body.image_path_override || '').trim() || null;
+  const sourceImageUrl = (req.body.source_image_url || '').trim() || null;
+  const customImageUrl = (req.body.custom_image_url || '').trim() || null;
+  let customDownloadedPath = null;
+  if (!id && customImageUrl && /^https?:\/\//i.test(customImageUrl)) {
+    const referer = (req.body.source_url || '').trim() || customImageUrl;
+    customDownloadedPath = await downloadImageByUrl(customImageUrl, referer);
+  }
+  try {
+    if (id) {
+      const existing = db.prepare('SELECT * FROM products WHERE id = ?').get(id);
+      if (!existing) {
+        req.session.flash = { type: 'error', message: 'المنتج غير موجود.' };
+        return res.redirect('/admin/products');
+      }
+      let imagePath = existing.image_path;
+      if (files.length) imagePath = `/uploads/products/${files[0].filename}`;
+      let galleryPaths = existing.gallery_paths;
+      if (gallery) {
+        const old = existing.gallery_paths ? JSON.parse(existing.gallery_paths) : [];
+        const fresh = JSON.parse(gallery);
+        galleryPaths = JSON.stringify([...old, ...fresh]);
+      }
+      db.prepare(
+        `UPDATE products SET
+          name_ar=@name_ar, name_fr=@name_fr, name_en=@name_en,
+          description_ar=@description_ar, description_fr=@description_fr, description_en=@description_en,
+          category_id=@category_id, original_price=@original_price, selling_price=@selling_price,
+          cost_price=@cost_price, sku=@sku, stock=@stock, status=@status, featured=@featured,
+          source_url=@source_url, source_store=@source_store, updated_at=@updated_at,
+          image_path=@image_path, source_image_url=@source_image_url, gallery_paths=@gallery_paths
+          WHERE id=@id`
+      ).run({
+        ...fields,
+        image_path: imagePath,
+        source_image_url: sourceImageUrl,
+        gallery_paths: galleryPaths,
+        id,
+      });
+    } else {
+      const imagePath = files.length
+        ? `/uploads/products/${files[0].filename}`
+        : customDownloadedPath || imagePathOverride;
+      const { updated_at: _u, ...insertFields } = fields;
+      const info = db
+        .prepare(
+          `INSERT INTO products (
+            name_ar, name_fr, name_en,
+            description_ar, description_fr, description_en,
+            category_id, original_price, selling_price, cost_price,
+            sku, stock, status, featured,
+            source_url, source_store, image_path, source_image_url, gallery_paths
+          ) VALUES (
+            @name_ar, @name_fr, @name_en,
+            @description_ar, @description_fr, @description_en,
+            @category_id, @original_price, @selling_price, @cost_price,
+            @sku, @stock, @status, @featured,
+            @source_url, @source_store, @image_path, @source_image_url, @gallery_paths
+          )`
+        )
+        .run({
+          ...insertFields,
           image_path: imagePath,
           source_image_url: sourceImageUrl,
-          gallery_paths: galleryPaths,
-          id,
+          gallery_paths: gallery,
         });
-      } else {
-        const imagePath = files.length
-          ? `/uploads/products/${files[0].filename}`
-          : customDownloadedPath || imagePathOverride;
-        // Strip updated_at — INSERT uses schema default CURRENT_TIMESTAMP.
-        const { updated_at: _u, ...insertFields } = fields;
-        const info = db
-          .prepare(
-            `INSERT INTO products (
-              name_ar, name_fr, name_en,
-              description_ar, description_fr, description_en,
-              category_id, original_price, selling_price, cost_price,
-              sku, stock, status, featured,
-              source_url, source_store, image_path, source_image_url, gallery_paths
-            ) VALUES (
-              @name_ar, @name_fr, @name_en,
-              @description_ar, @description_fr, @description_en,
-              @category_id, @original_price, @selling_price, @cost_price,
-              @sku, @stock, @status, @featured,
-              @source_url, @source_store, @image_path, @source_image_url, @gallery_paths
-            )`
-          )
-          .run({
-            ...insertFields,
-            image_path: imagePath,
-            source_image_url: sourceImageUrl,
-            gallery_paths: gallery,
-          });
-        return res.redirect(`/admin/products/${info.lastInsertRowid}/edit`);
-      }
-      req.session.flash = { type: 'success', message: 'تم حفظ المنتج.' };
-      res.redirect('/admin/products');
-    } catch (e) {
-      console.error(e);
-      req.session.flash = { type: 'error', message: 'تعذر الحفظ: ' + e.message };
-      res.redirect(id ? `/admin/products/${id}/edit` : '/admin/products/new');
+      return res.redirect(`/admin/products/${info.lastInsertRowid}/edit`);
     }
+    req.session.flash = { type: 'success', message: 'تم حفظ المنتج.' };
+    res.redirect('/admin/products');
+  } catch (e) {
+    console.error(e);
+    req.session.flash = { type: 'error', message: 'تعذر الحفظ: ' + e.message };
+    res.redirect(id ? `/admin/products/${id}/edit` : '/admin/products/new');
   }
-);
+});
 
 // ---- Delete product ----
 router.post('/products/:id/delete', requireAdmin, (req, res) => {
   const p = db.prepare('SELECT * FROM products WHERE id = ?').get(req.params.id);
   if (!p) return res.redirect('/admin/products');
   db.prepare('DELETE FROM products WHERE id = ?').run(p.id);
-  // best-effort: remove image files
   const tryRemove = (rel) => {
     if (!rel) return;
     const f = path.join(__dirname, '..', 'public', rel);
@@ -244,9 +228,7 @@ router.post('/products/:id/delete', requireAdmin, (req, res) => {
   };
   tryRemove(p.image_path);
   if (p.gallery_paths) {
-    try {
-      JSON.parse(p.gallery_paths).forEach(tryRemove);
-    } catch {}
+    try { JSON.parse(p.gallery_paths).forEach(tryRemove); } catch {}
   }
   req.session.flash = { type: 'success', message: 'تم حذف المنتج.' };
   res.redirect('/admin/products');
@@ -258,9 +240,7 @@ router.post('/products/:id/toggle', requireAdmin, (req, res) => {
   if (!p) return res.redirect('/admin/products');
   const next = p.status === 'published' ? 'draft' : 'published';
   db.prepare('UPDATE products SET status = ?, updated_at = ? WHERE id = ?').run(
-    next,
-    new Date().toISOString(),
-    p.id
+    next, new Date().toISOString(), p.id
   );
   res.redirect('/admin/products');
 });
@@ -275,17 +255,11 @@ router.post('/import', requireAdmin, async (req, res) => {
   try {
     const data = await importFromUrl(url);
     res.render('admin/import', {
-      title: 'استيراد منتج برابط',
-      result: data,
-      error: null,
-      url,
+      title: 'استيراد منتج برابط', result: data, error: null, url,
     });
   } catch (e) {
     res.render('admin/import', {
-      title: 'استيراد منتج برابط',
-      result: null,
-      error: e.message,
-      url,
+      title: 'استيراد منتج برابط', result: null, error: e.message, url,
     });
   }
 });
@@ -308,15 +282,64 @@ router.get('/orders/:id', requireAdmin, (req, res) => {
   res.render('admin/order-detail', { title: `طلب #${order.order_number}`, order, items });
 });
 
+// Admin: download invoice PDF for an order
+router.get('/orders/:id/invoice.pdf', requireAdmin, async (req, res, next) => {
+  try {
+    const { invoiceNumber, pdfPath } = await generateInvoiceForOrder(
+      db, Number(req.params.id),
+    );
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${invoiceNumber}.pdf"`);
+    res.sendFile(pdfPath);
+  } catch (e) {
+    console.error('[admin-invoice]', e);
+    next(e);
+  }
+});
+
+// Update order status. When status becomes "delivered":
+//   1. set delivered_at = now
+//   2. ensure invoice PDF exists (generate if needed)
+//   3. send invoice to admin via email + Telegram (fire-and-forget)
 router.post('/orders/:id/status', requireAdmin, (req, res) => {
   const allowed = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'];
-  const status = allowed.includes(req.body.status) ? req.body.status : 'pending';
-  db.prepare('UPDATE orders SET status = ?, updated_at = ? WHERE id = ?').run(
-    status,
-    new Date().toISOString(),
-    req.params.id
-  );
-  res.redirect(`/admin/orders/${req.params.id}`);
+  const newStatus = allowed.includes(req.body.status) ? req.body.status : 'pending';
+  const orderId = Number(req.params.id);
+  const existing = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+  if (!existing) return res.redirect('/admin/orders');
+
+  if (newStatus === 'delivered') {
+    db.prepare(
+      `UPDATE orders SET status = ?, updated_at = ?, delivered_at = CURRENT_TIMESTAMP WHERE id = ?`
+    ).run(newStatus, new Date().toISOString(), orderId);
+  } else {
+    db.prepare('UPDATE orders SET status = ?, updated_at = ? WHERE id = ?').run(
+      newStatus, new Date().toISOString(), orderId,
+    );
+  }
+
+  // If delivered, send invoice to admin (fire-and-forget).
+  if (newStatus === 'delivered') {
+    (async () => {
+      try {
+        const { invoiceNumber, pdfPath } = await generateInvoiceForOrder(db, orderId);
+        const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+        const result = await notifyInvoiceReady({ order, invoiceNumber, pdfPath });
+        console.log('[invoice-delivery]', orderId, JSON.stringify(result));
+      } catch (e) {
+        console.error('[invoice-delivery]', e);
+      }
+    })();
+  }
+
+  req.session.flash = {
+    type: 'success',
+    message:
+      newStatus === 'delivered'
+        ? 'تم تأكيد التسليم وإرسال الفاتورة.'
+        : 'تم تحديث الحالة.',
+  };
+  res.redirect(`/admin/orders/${orderId}`);
 });
 
 // ---- Categories ----
@@ -364,9 +387,12 @@ router.post('/settings', requireAdmin, (req, res) => {
     'store_name', 'store_currency', 'contact_phone', 'contact_email',
     'contact_whatsapp', 'contact_address', 'shipping_fee',
     'free_shipping_threshold', 'footer_note',
-    // Notification settings
     'telegram_bot_token', 'telegram_chat_id',
     'callmebot_phone', 'callmebot_api_key',
+    // Company / invoice info
+    'site_url', 'site_name', 'site_tagline',
+    'company_address', 'company_city', 'company_phone',
+    'company_email', 'company_if', 'company_ice', 'company_patente',
   ];
   for (const f of fields) {
     if (req.body[f] != null) setSetting(f, String(req.body[f]).trim());
@@ -375,7 +401,6 @@ router.post('/settings', requireAdmin, (req, res) => {
   res.redirect('/admin/settings');
 });
 
-// ---- Test notification (Telegram / WhatsApp) ----
 router.post('/notifications/test', requireAdmin, async (req, res) => {
   const channel = (req.body && req.body.channel) || '';
   if (!['telegram', 'whatsapp'].includes(channel)) {
@@ -394,7 +419,6 @@ router.post('/notifications/test', requireAdmin, async (req, res) => {
   }
 });
 
-// ---- Change password ----
 router.post('/account/password', requireAdmin, (req, res) => {
   const { current, next: nxt } = req.body;
   const row = db.prepare('SELECT * FROM admins WHERE id = ?').get(req.session.adminId);
