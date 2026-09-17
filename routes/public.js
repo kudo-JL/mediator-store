@@ -251,11 +251,6 @@ router.post('/checkout', (req, res) => {
     }).catch((e) => console.error('[notify]', e));
   } catch (e) { console.error('[notify-init]', e); }
 
-  // Fire-and-forget invoice PDF generation (cached on disk).
-  // Catches errors silently — invoice can also be regenerated later.
-  generateInvoiceForOrder(db, orderId)
-    .catch((e) => console.error('[invoice-gen]', e));
-
   res.redirect(`/order/${orderNumber}`);
 });
 
