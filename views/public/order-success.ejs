@@ -36,6 +36,12 @@
       </a>
     <% } %>
 
+    <p>
+      <a class="btn btn-ghost" href="/invoice/<%= order.order_number %>.pdf" target="_blank" rel="noopener">
+        📄 <%= t('download_invoice') || 'تحميل الفاتورة' %>
+      </a>
+    </p>
+
     <p><a href="/" class="btn btn-ghost"><%= t('back_home') %></a></p>
   </div>
 </section>
