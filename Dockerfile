@@ -8,7 +8,7 @@ WORKDIR /app
 
 # Install OS deps needed for some npm packages (e.g. cheerio optional deps)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      python3 make g++ ca-certificates \
+      python3 make g++ ca-certificates curl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY package.json package-lock.json* ./
@@ -20,12 +20,18 @@ WORKDIR /app
 
 # Run as non-root
 RUN groupadd --system app && useradd --system --gid app --home /app --shell /sbin/nologin app \
- && mkdir -p /app/data /app/uploads/products \
+ && mkdir -p /app/data /app/uploads/products /app/lib/fonts \
  && chown -R app:app /app
 
 ENV NODE_ENV=production \
     PORT=3000 \
     NODE_OPTIONS="--enable-source-maps"
+
+# Download Arabic font (Amiri) during build — no manual upload needed.
+# Amiri is a free Arabic font that supports all contextual letter forms.
+RUN curl -fsSL -o /app/lib/fonts/Amiri-Regular.ttf \
+      https://github.com/aliftype/amiri/raw/main/fonts/ttf/Amiri-Regular.ttf \
+ && chown app:app /app/lib/fonts/Amiri-Regular.ttf
 
 COPY --from=builder --chown=app:app /app/node_modules ./node_modules
 COPY --chown=app:app package.json ./
@@ -39,9 +45,9 @@ COPY --chown=app:app uploads ./uploads
 COPY --chown=app:app data ./data
 
 # Make sure runtime dirs are writable by app
-RUN chown -R app:app /app/data /app/uploads
+RUN chown -R app:app /app/data /app/uploads /app/lib/fonts
 
-USER root
+USER app
 
 EXPOSE 3000
 
