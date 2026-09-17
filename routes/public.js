@@ -6,7 +6,6 @@ const axios = require('axios');
 const router = express.Router();
 
 const { db, generateOrderNumber, getSetting } = require('../lib/db');
-const { generateInvoiceForOrder } = require('../lib/invoice');
 
 // ---- Helpers ----
 function getCart(req) {
