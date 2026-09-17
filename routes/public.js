@@ -6,6 +6,7 @@ const axios = require('axios');
 const router = express.Router();
 
 const { db, generateOrderNumber, getSetting } = require('../lib/db');
+const { generateInvoiceForOrder } = require('../lib/invoice');
 
 // ---- Helpers ----
 function getCart(req) {
@@ -35,7 +36,6 @@ function publicProduct(p, lang) {
     name: getProductName(p, lang),
     description: getProductDesc(p, lang),
     image_path: p.image_path,
-    // Fallback: if no local image, use the source URL we kept in DB.
     source_image_url: p.source_image_url,
     selling_price: p.selling_price,
     sku: p.sku,
@@ -43,7 +43,6 @@ function publicProduct(p, lang) {
     category_id: p.category_id,
     stock: p.stock,
     featured: !!p.featured,
-    // explicitly omit original_price, cost_price, source_url
   };
 }
 
@@ -51,14 +50,10 @@ function publicProduct(p, lang) {
 router.get('/', (req, res) => {
   const lang = res.locals.lang;
   const featured = db
-    .prepare(
-      `SELECT * FROM products WHERE status = 'published' AND featured = 1 ORDER BY created_at DESC LIMIT 8`
-    )
+    .prepare(`SELECT * FROM products WHERE status = 'published' AND featured = 1 ORDER BY created_at DESC LIMIT 8`)
     .all();
   const latest = db
-    .prepare(
-      `SELECT * FROM products WHERE status = 'published' ORDER BY created_at DESC LIMIT 24`
-    )
+    .prepare(`SELECT * FROM products WHERE status = 'published' ORDER BY created_at DESC LIMIT 24`)
     .all();
   const cats = db.prepare('SELECT * FROM categories ORDER BY name_ar').all();
   res.render('public/index', {
@@ -75,9 +70,7 @@ router.get('/c/:slug', (req, res) => {
   const cat = db.prepare('SELECT * FROM categories WHERE slug = ?').get(req.params.slug);
   if (!cat) return res.status(404).render('public/404', { title: '404' });
   const rows = db
-    .prepare(
-      `SELECT * FROM products WHERE status = 'published' AND category_id = ? ORDER BY created_at DESC`
-    )
+    .prepare(`SELECT * FROM products WHERE status = 'published' AND category_id = ? ORDER BY created_at DESC`)
     .all(cat.id);
   res.render('public/category', {
     title: getProductName(cat, lang),
@@ -92,9 +85,7 @@ router.get('/p/:id', (req, res) => {
   const p = db.prepare("SELECT * FROM products WHERE id = ? AND status = 'published'").get(req.params.id);
   if (!p) return res.status(404).render('public/404', { title: '404' });
   const related = db
-    .prepare(
-      `SELECT * FROM products WHERE status = 'published' AND id != ? AND category_id = ? ORDER BY created_at DESC LIMIT 4`
-    )
+    .prepare(`SELECT * FROM products WHERE status = 'published' AND id != ? AND category_id = ? ORDER BY created_at DESC LIMIT 4`)
     .all(p.id, p.category_id || 0)
     .map((x) => publicProduct(x, lang));
   res.render('public/product', {
@@ -111,11 +102,9 @@ router.get('/search', (req, res) => {
   let rows = [];
   if (q) {
     rows = db
-      .prepare(
-        `SELECT * FROM products WHERE status = 'published' AND (
+      .prepare(`SELECT * FROM products WHERE status = 'published' AND (
           name_ar LIKE ? OR name_fr LIKE ? OR name_en LIKE ? OR description_ar LIKE ?
-        ) ORDER BY created_at DESC LIMIT 60`
-      )
+        ) ORDER BY created_at DESC LIMIT 60`)
       .all(`%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`);
   }
   res.render('public/search', {
@@ -125,7 +114,7 @@ router.get('/search', (req, res) => {
   });
 });
 
-// ---- Cart helpers (JSON endpoints for the front-end) ----
+// ---- Cart helpers ----
 router.post('/cart/add', (req, res) => {
   const id = parseInt(req.body.product_id, 10);
   const qty = Math.max(1, parseInt(req.body.quantity, 10) || 1);
@@ -197,12 +186,8 @@ router.post('/checkout', (req, res) => {
   const cart = getCart(req);
   if (cart.items.length === 0) return res.redirect('/cart');
   const {
-    customer_name = '',
-    customer_phone = '',
-    customer_email = '',
-    customer_address = '',
-    customer_city = '',
-    customer_notes = '',
+    customer_name = '', customer_phone = '', customer_email = '',
+    customer_address = '', customer_city = '', customer_notes = '',
     payment_method = 'cod',
   } = req.body;
   if (!customer_name.trim() || !customer_phone.trim()) {
@@ -218,7 +203,6 @@ router.post('/checkout', (req, res) => {
   const total = subtotal + ship;
   const orderNumber = generateOrderNumber();
 
-  // node:sqlite has no db.transaction(); do BEGIN/COMMIT manually.
   let orderId = null;
   try {
     db.exec('BEGIN');
@@ -231,17 +215,9 @@ router.post('/checkout', (req, res) => {
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)`
       )
       .run(
-        orderNumber,
-        customer_name.trim(),
-        customer_phone.trim(),
-        customer_email.trim(),
-        customer_address.trim(),
-        customer_city.trim(),
-        customer_notes.trim(),
-        subtotal,
-        ship,
-        total,
-        payment_method
+        orderNumber, customer_name.trim(), customer_phone.trim(),
+        customer_email.trim(), customer_address.trim(), customer_city.trim(),
+        customer_notes.trim(), subtotal, ship, total, payment_method
       );
     orderId = info.lastInsertRowid;
     const itemStmt = db.prepare(
@@ -250,7 +226,6 @@ router.post('/checkout', (req, res) => {
     );
     for (const it of cart.items) {
       itemStmt.run(orderId, it.product_id, it.name, it.unit_price, it.quantity, it.unit_price * it.quantity);
-      // decrement stock
       db.prepare('UPDATE products SET stock = MAX(0, stock - ?) WHERE id = ?').run(it.quantity, it.product_id);
     }
     db.exec('COMMIT');
@@ -260,8 +235,7 @@ router.post('/checkout', (req, res) => {
   }
   saveCart(req, { items: [] });
 
-  // Fire-and-forget admin notification (Telegram + WhatsApp).
-  // We don't await so the customer gets redirected immediately.
+  // Fire-and-forget admin notification (Telegram + WhatsApp)
   try {
     const { notifyNewOrder } = require('../lib/notifications');
     notifyNewOrder({
@@ -273,17 +247,15 @@ router.post('/checkout', (req, res) => {
       customer_address: customer_address.trim(),
       customer_notes: customer_notes.trim(),
       payment_method,
-      subtotal,
-      shipping: ship,
-      total,
-      items: cart.items.map((it) => ({
-        product_name: it.name,
-        quantity: it.quantity,
-      })),
+      subtotal, shipping: ship, total,
+      items: cart.items.map((it) => ({ product_name: it.name, quantity: it.quantity })),
     }).catch((e) => console.error('[notify]', e));
-  } catch (e) {
-    console.error('[notify-init]', e);
-  }
+  } catch (e) { console.error('[notify-init]', e); }
+
+  // Fire-and-forget invoice PDF generation (cached on disk).
+  // Catches errors silently — invoice can also be regenerated later.
+  generateInvoiceForOrder(db, orderId)
+    .catch((e) => console.error('[invoice-gen]', e));
 
   res.redirect(`/order/${orderNumber}`);
 });
@@ -298,9 +270,24 @@ router.get('/order/:order_number', (req, res) => {
   res.render('public/order-success', { title: 'تم استلام طلبك', order, items });
 });
 
+// ---- Download invoice (public) ----
+router.get('/invoice/:order_number.pdf', async (req, res, next) => {
+  try {
+    const order = db
+      .prepare('SELECT id FROM orders WHERE order_number = ?')
+      .get(req.params.order_number);
+    if (!order) return res.status(404).send('Order not found');
+    const { invoiceNumber, pdfPath } = await generateInvoiceForOrder(db, order.id);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${invoiceNumber}.pdf"`);
+    res.sendFile(pdfPath);
+  } catch (e) {
+    console.error('[invoice]', e);
+    next(e);
+  }
+});
+
 // ---- Image proxy ----
-// Streams an external image through the server so the browser can render
-// it without dealing with CORS / hotlink protection on the source site.
 const ALLOWED_HOST_HINTS = /\.(jpg|jpeg|png|gif|webp|avif|svg)(\?|$|#)/i;
 router.get('/img-proxy', async (req, res) => {
   const url = (req.query.url || '').trim();
@@ -338,9 +325,7 @@ router.get('/lang/:code', (req, res) => {
   res.redirect(req.query.next || '/');
 });
 
-// ---- Legal pages: Privacy / Terms / Return ----
-// Each legal page is rendered in the language chosen via ?lang= or cookie/header.
-// Content of each language is in a dedicated EJS template.
+// ---- Legal pages ----
 router.get('/privacy', (req, res) => {
   const lang = res.locals.lang || 'ar';
   const tpl = `public/privacy-${lang}`;
@@ -351,7 +336,7 @@ router.get('/privacy', (req, res) => {
 router.get('/terms', (req, res) => {
   const lang = res.locals.lang || 'ar';
   const tpl = `public/terms-${lang}`;
-  const titleMap = { ar: 'شروط الاستخدام', fr: 'Conditions d\'Utilisation', en: 'Terms of Service' };
+  const titleMap = { ar: 'شروط الاستخدام', fr: "Conditions d'Utilisation", en: 'Terms of Service' };
   res.render(tpl, { title: `${titleMap[lang] || titleMap.ar} | ${res.locals.site.name}` });
 });
 
