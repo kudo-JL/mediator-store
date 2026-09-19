@@ -195,10 +195,28 @@ router.post('/checkout', (req, res) => {
     customer_address = '', customer_city = '', customer_notes = '',
     payment_method = 'cod',
   } = req.body;
-  if (!customer_name.trim() || !customer_phone.trim()) {
+    if (!customer_name.trim() || !customer_phone.trim()) {
     req.session.flash = { type: 'error', message: 'الاسم والهاتف مطلوبان.' };
     return res.redirect('/checkout');
   }
+
+  // Verify stock for every cart item BEFORE placing the order
+  for (const it of cart.items) {
+    const fresh = db.prepare("SELECT id, stock, status FROM products WHERE id = ?").get(it.product_id);
+    if (!fresh || fresh.status !== 'published' || fresh.stock <= 0) {
+      req.session.flash = { type: 'error', message: `المنتج "${it.name}" غير متوفر.` };
+      cart.items = cart.items.filter((x) => x.product_id !== it.product_id);
+      saveCart(req, cart);
+      return res.redirect('/cart');
+    }
+    if (it.quantity > fresh.stock) {
+      req.session.flash = { type: 'error', message: `الكمية المتاحة من "${it.name}" هي ${fresh.stock} فقط.` };
+      it.quantity = fresh.stock;
+      saveCart(req, cart);
+      return res.redirect('/cart');
+    }
+  }
+
   const subtotal = cart.items.reduce((s, it) => s + it.unit_price * it.quantity, 0);
   const ship =
     res.locals.site.free_shipping_threshold > 0 &&
