@@ -48,11 +48,16 @@
         body: JSON.stringify({ product_id: parseInt(pid, 10), quantity: qty }),
       });
       const d = await r.json();
-      if (r.ok) {
+            if (r.ok) {
         setCount(d.count);
         toast('✓ تمت الإضافة إلى السلة');
       } else {
-        toast('⚠ ' + (d.error || 'error'));
+        const msgs = {
+          out_of_stock: '⚠ هذا المنتج غير متوفر',
+          not_enough_stock: '⚠ الكمية المتاحة أقل (' + (d.max || 0) + ')',
+          not_found: '⚠ المنتج غير موجود'
+        };
+        toast(msgs[d.error] || ('⚠ ' + (d.error || 'خطأ')));
       }
     } catch {
       toast('⚠ error');
