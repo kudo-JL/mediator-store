@@ -119,9 +119,12 @@ router.post('/cart/add', (req, res) => {
   const qty = Math.max(1, parseInt(req.body.quantity, 10) || 1);
   const p = db.prepare("SELECT * FROM products WHERE id = ? AND status = 'published'").get(id);
   if (!p) return res.status(404).json({ error: 'not_found' });
+  if (p.stock <= 0) return res.status(400).json({ error: 'out_of_stock' });
   const cart = getCart(req);
   const existing = cart.items.find((it) => it.product_id === id);
-  if (existing) existing.quantity += qty;
+  const newQty = (existing ? existing.quantity : 0) + qty;
+  if (newQty > p.stock) return res.status(400).json({ error: 'not_enough_stock', max: p.stock });
+  if (existing) existing.quantity = newQty;
   else
     cart.items.push({
       product_id: p.id,
