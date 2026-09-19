@@ -188,12 +188,12 @@
   "legal_links": "Legal",
   "privacy_policy": "Privacy Policy",
   "terms_of_service": "Terms of Service",
-  "return_policy": "Return Policy"
+  "return_policy": "Return Policy",
   "free_shipping_banner_text": "Free shipping on orders over",
   "free_ship_congrats": "Congratulations!",
   "free_ship_you_qualify": "Your order qualifies for free shipping",
   "free_ship_add_more": "Add",
   "free_ship_to_qualify": "to qualify for free shipping",
   "free_ship_threshold_label": "Free shipping threshold",
-  "free_ship_fee_label": "Shipping fee",
+  "free_ship_fee_label": "Shipping fee"
 }
