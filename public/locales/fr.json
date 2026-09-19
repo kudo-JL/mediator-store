@@ -189,4 +189,11 @@
   "privacy_policy": "Politique de Confidentialité",
   "terms_of_service": "Conditions d'Utilisation",
   "return_policy": "Politique de Retour"
+  "free_shipping_banner_text": "Livraison gratuite à partir de",
+  "free_ship_congrats": "Bravo !",
+  "free_ship_you_qualify": "Votre commande bénéficie de la livraison gratuite",
+  "free_ship_add_more": "Ajoutez",
+  "free_ship_to_qualify": "pour bénéficier de la livraison gratuite",
+  "free_ship_threshold_label": "Seuil de livraison gratuite",
+  "free_ship_fee_label": "Frais de livraison"
 }
