@@ -374,3 +374,28 @@ button { font: inherit; }
   .fship-progress-text { font-size: 0.95rem; }
   .fship-banner { font-size: 0.85rem; }
 }
+/* Out-of-stock badge on product cards */
+.badge-out-of-stock {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #dc3545;
+  color: #fff;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  z-index: 2;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.product-card {
+  position: relative;
+}
+
+.product-card .btn:disabled,
+.product-card .btn[disabled] {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
