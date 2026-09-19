@@ -195,5 +195,6 @@
   "free_ship_add_more": "Add",
   "free_ship_to_qualify": "to qualify for free shipping",
   "free_ship_threshold_label": "Free shipping threshold",
-  "free_ship_fee_label": "Shipping fee"
+  "free_ship_fee_label": "Shipping fee",
+  "download_invoice": "Download Invoice"
 }
