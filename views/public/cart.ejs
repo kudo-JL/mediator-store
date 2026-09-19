@@ -44,6 +44,39 @@
           </tr>
         </tfoot>
       </table>
+            <%# ---- Free-shipping progress (shows only when a threshold is configured) ---- %>
+      <%
+        const _fshipThr = parseFloat(site.free_shipping_threshold) || 0;
+        const _fshipFee = parseFloat(site.shipping_fee) || 0;
+        const _fshipAchieved = _fshipThr > 0 && subtotal >= _fshipThr;
+        const _fshipRemaining = _fshipThr > 0 ? Math.max(0, _fshipThr - subtotal) : 0;
+        const _fshipPct = _fshipThr > 0 ? Math.min(100, (subtotal / _fshipThr) * 100) : 0;
+      %>
+      <% if (_fshipThr > 0 && _fshipFee > 0) { %>
+        <div class="fship-progress <%= _fshipAchieved ? 'fship-success' : '' %>">
+          <p class="fship-progress-text">
+            <% if (_fshipAchieved) { %>
+              🎉 <strong><%= t('free_ship_congrats') || 'مبروك!' %></strong>
+              <%= t('free_ship_you_qualify') || 'طلبك يستحق شحن مجاني' %>
+            <% } else { %>
+              🚚 <%= t('free_ship_add_more') || 'أضف' %>
+              <strong><%= _fshipRemaining.toFixed(2) %> <%= site.currency || 'DH' %></strong>
+              <%= t('free_ship_to_qualify') || 'للحصول على شحن مجاني' %>
+            <% } %>
+          </p>
+          <div class="fship-bar" aria-hidden="true">
+            <div class="fship-bar-fill" style="width: <%= _fshipPct.toFixed(1) %>%"></div>
+          </div>
+          <p class="fship-meta">
+            <%= t('free_ship_threshold_label') || 'حد الشحن المجاني' %>:
+            <strong><%= _fshipThr %> <%= site.currency || 'DH' %></strong>
+            <span class="fship-meta-sep">·</span>
+            <%= t('free_ship_fee_label') || 'رسوم الشحن' %>:
+            <strong><%= _fshipFee %> <%= site.currency || 'DH' %></strong>
+          </p>
+        </div>
+      <% } %>
+
       <div class="cart-actions">
         <a href="/" class="btn btn-ghost"><%= t('continue_shopping') %></a>
         <a href="/checkout" class="btn btn-primary btn-lg"><%= t('proceed_to_checkout') %></a>
