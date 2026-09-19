@@ -305,3 +305,72 @@ label { display: block; font-weight: 500; margin-bottom: 6px; }
 /* ---- Misc ---- */
 .big-code { font-size: 5rem; margin: 0; color: var(--muted); font-weight: 800; }
 button { font: inherit; }
+
+/* ---- Free-shipping banner (header) ---- */
+.fship-banner {
+  background: linear-gradient(90deg, #2563eb, #1d4ed8);
+  color: #fff;
+  text-align: center;
+  padding: 8px 16px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.fship-banner-ico { font-size: 1rem; }
+.fship-banner-text strong { margin-inline-start: 4px; }
+.fship-banner a { color: #fff; text-decoration: underline; }
+
+/* ---- Free-shipping progress bar (cart) ---- */
+.fship-progress {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin: 20px 0 0;
+  text-align: start;
+}
+.fship-progress.fship-success {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+}
+.fship-progress-text {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  color: var(--ink);
+}
+.fship-progress.fship-success .fship-progress-text {
+  color: #166534;
+}
+.fship-bar {
+  height: 10px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 0 0 10px;
+}
+.fship-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb, #1d4ed8);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+.fship-progress.fship-success .fship-bar-fill {
+  background: linear-gradient(90deg, #16a34a, #15803d);
+}
+.fship-meta {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.fship-meta strong { color: var(--ink); }
+.fship-meta-sep { margin: 0 8px; opacity: 0.5; }
+
+@media (max-width: 700px) {
+  .fship-progress { padding: 12px 14px; }
+  .fship-progress-text { font-size: 0.95rem; }
+  .fship-banner { font-size: 0.85rem; }
+}
