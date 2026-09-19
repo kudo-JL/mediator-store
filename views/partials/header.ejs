@@ -19,6 +19,16 @@
   <meta name="application-name" content="<%= site.name %>">
 </head>
 <body class="lang-<%= lang %> dir-<%= dir %>">
+<% const _fshipThreshold = parseFloat(site.free_shipping_threshold) || 0; %>
+<% if (_fshipThreshold > 0) { %>
+  <div class="fship-banner" role="status">
+    <span class="fship-banner-ico" aria-hidden="true">🚚</span>
+    <span class="fship-banner-text">
+      <%= t('free_shipping_banner_text') || 'شحن مجاني للطلبات فوق' %>
+      <strong><%= _fshipThreshold %> <%= site.currency || 'درهم' %></strong>
+    </span>
+  </div>
+<% } %>
 <header class="site-header">
   <div class="container header-row">
     <a class="brand" href="/">
