@@ -374,19 +374,22 @@ button { font: inherit; }
   .fship-progress-text { font-size: 0.95rem; }
   .fship-banner { font-size: 0.85rem; }
 }
-/* Out-of-stock badge on product cards */
+/* Out-of-stock badge on product cards (override small circle from .badge) */
 .badge-out-of-stock {
   position: absolute;
+  inset-inline-end: 8px;
   top: 8px;
-  left: 8px;
+  width: auto !important;
+  height: auto !important;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
   background: #dc3545;
   color: #fff;
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  border-radius: 6px;
-  z-index: 2;
+  border-radius: 6px !important;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  z-index: 2;
+  white-space: nowrap;
 }
 
 .product-card {
@@ -395,7 +398,7 @@ button { font: inherit; }
 
 .product-card .btn:disabled,
 .product-card .btn[disabled] {
-  background: #ccc;
+  background: #ccc !important;
   cursor: not-allowed;
   opacity: 0.6;
 }
