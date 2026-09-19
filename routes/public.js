@@ -140,6 +140,9 @@ router.post('/cart/add', (req, res) => {
 router.post('/cart/update', (req, res) => {
   const id = parseInt(req.body.product_id, 10);
   const qty = Math.max(0, parseInt(req.body.quantity, 10) || 0);
+  const p = db.prepare("SELECT * FROM products WHERE id = ?").get(id);
+  if (!p) return res.status(404).json({ error: 'not_found' });
+  if (qty > 0 && qty > p.stock) return res.status(400).json({ error: 'not_enough_stock', max: p.stock });
   const cart = getCart(req);
   const idx = cart.items.findIndex((it) => it.product_id === id);
   if (idx >= 0) {
